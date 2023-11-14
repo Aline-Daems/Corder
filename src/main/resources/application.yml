@@ -1,0 +1,14 @@
+Spring:
+  datasource:
+    url:  jdbc:postgresql://localhost:5432/corder
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+        ddl-auto: create
+    show-sql: true
+    database: postgresql
+    properties:
+        hibernate:
+          format_sql: true
