@@ -3,11 +3,12 @@ package be.technobel.corder.bl;
 import be.technobel.corder.dal.models.Address;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AddressService {
-    Address create(Address address);
-    Address update(Address address);
+    void create(Address address);
+    void update(Address address);
     Address findById(Long id);
     List<Address> findAll();
-    Address delete(Long id);
+    void delete(Long id);
 }
