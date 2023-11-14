@@ -3,6 +3,7 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.bl.UserService;
 import be.technobel.corder.dal.models.User;
 import be.technobel.corder.dal.repositories.UserRepository;
+import be.technobel.corder.pl.models.forms.UserForm;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User create(User user) {
-        return userRepository.save(user);
+    public User create(UserForm user) {
+        return userRepository.save(user.toEntity());
     }
 
     @Override
