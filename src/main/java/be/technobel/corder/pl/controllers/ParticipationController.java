@@ -1,4 +1,4 @@
-package be.technobel.corder.pl.controller;
+package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.pl.models.ParticipationForm;
