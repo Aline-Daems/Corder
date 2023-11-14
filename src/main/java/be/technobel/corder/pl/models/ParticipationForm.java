@@ -8,19 +8,18 @@ import java.time.LocalDate;
 
 public class ParticipationForm {
 
-    @Temporal(value = TemporalType.DATE)
+
     private LocalDate participationDate;
     private String participantFirstName;
     private String participantLastName;
     private String participantEmail;
-    @OneToOne
-    @JoinColumn(referencedColumnName = "address_id", name = "address_id")
+
     private Address participantAddress;
     private boolean validated;
     private boolean shipped;
     private String pictureName;
     private String pictureType;
-    @Lob
+
     private Blob blob;
 
     public LocalDate getParticipationDate() {
