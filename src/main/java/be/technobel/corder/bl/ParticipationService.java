@@ -6,9 +6,9 @@ import jakarta.servlet.http.Part;
 import java.util.List;
 
 public interface ParticipationService {
-    Participation create(Participation participation);
+    void create(Participation participation);
     List<Participation> findAll();
     Participation findById(Long id);
-    Participation update(Long id, Participation participation);
-    Participation delete(Long id);
+    void update(Long id, Participation participation);
+    void delete(Long id);
 }
