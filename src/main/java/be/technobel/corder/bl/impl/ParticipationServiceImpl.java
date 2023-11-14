@@ -4,10 +4,11 @@ import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import jakarta.ws.rs.NotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister;
+
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
