@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AddressService {
     void create(Address address);
-    void update(Address address);
+    void update(Long id, Address address);
     Address findById(Long id);
     List<Address> findAll();
     void delete(Long id);

@@ -2,6 +2,7 @@ package be.technobel.corder.bl.impl;
 
 import be.technobel.corder.bl.AddressService;
 import be.technobel.corder.dal.models.Address;
+import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.AddressRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import jakarta.ws.rs.NotFoundException;
@@ -26,7 +27,11 @@ public class AddressServiceImpl implements AddressService {
 
 
     @Override
-    public void update(Address address) {
+    public void update(Long id, Address address) {
+        Address entity = addressRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
+        entity.setCity(address.getCity());
+        entity.setStreet(address.getStreet());
+        entity.setPostCode(address.getPostCode());
        addressRepository.save(address);
     }
 
