@@ -3,6 +3,7 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
+import be.technobel.corder.pl.models.ParticipationForm;
 import jakarta.ws.rs.NotFoundException;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
 
     @Override
-    public void create(Participation participation) {
+    public void create(ParticipationForm participation) {
         Participation entity = new Participation();
         entity.setParticipationDate(participation.getParticipationDate());
         entity.setParticipantFirstName(participation.getParticipantFirstName());
