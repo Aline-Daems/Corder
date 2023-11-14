@@ -3,7 +3,7 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
-import be.technobel.corder.pl.models.ParticipationForm;
+import be.technobel.corder.pl.models.forms.ParticipationForm;
 import jakarta.ws.rs.NotFoundException;
 
 import org.springframework.stereotype.Service;
@@ -27,6 +27,10 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setParticipantFirstName(participation.getParticipantFirstName());
         entity.setParticipantLastName(participation.getParticipantLastName());
         entity.setParticipantEmail(participation.getParticipantEmail());
+        entity.setShipped(participation.isShipped());
+        entity.setValidated(participation.isValidated());
+        entity.setPictureName(participation.getPictureName());
+        entity.setPictureType(participation.getPictureType());
 
         participationRepository.save(entity);
 
@@ -44,7 +48,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void update(Long id, Participation participation) {
+    public void update(Long id, ParticipationForm participation) {
         Participation entity = participationRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
         entity.setParticipationDate(participation.getParticipationDate());
         entity.setParticipantFirstName(participation.getParticipantFirstName());

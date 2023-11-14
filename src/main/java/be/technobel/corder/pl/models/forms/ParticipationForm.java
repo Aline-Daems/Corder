@@ -1,7 +1,6 @@
-package be.technobel.corder.pl.models;
+package be.technobel.corder.pl.models.forms;
 
 import be.technobel.corder.dal.models.Address;
-import jakarta.persistence.*;
 
 import java.sql.Blob;
 import java.time.LocalDate;
@@ -13,7 +12,6 @@ public class ParticipationForm {
     private String participantFirstName;
     private String participantLastName;
     private String participantEmail;
-
     private Address participantAddress;
     private boolean validated;
     private boolean shipped;

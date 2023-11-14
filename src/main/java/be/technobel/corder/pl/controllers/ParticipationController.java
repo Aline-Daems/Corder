@@ -1,11 +1,9 @@
 package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.ParticipationService;
-import be.technobel.corder.pl.models.ParticipationForm;
+import be.technobel.corder.pl.models.forms.ParticipationForm;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ParticipationController {
@@ -22,5 +20,9 @@ public class ParticipationController {
 
         participationService.create(form);
 
+    }
+    @PutMapping("/participation/update/{id}")
+    public void update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
+        participationService.update(id, participationForm);
     }
 }
