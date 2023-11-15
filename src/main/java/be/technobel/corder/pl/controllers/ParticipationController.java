@@ -24,7 +24,8 @@ public class ParticipationController {
         return ResponseEntity.ok(participation);
     }
     @PutMapping("/participation/update/{id}")
-    public void update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
-        participationService.update(id, participationForm);
+    public ResponseEntity<Participation> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
+      Participation participation =  participationService.update(id, participationForm);
+      return ResponseEntity.ok(participation);
     }
 }

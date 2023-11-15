@@ -48,14 +48,14 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
-    public void update(Long id, ParticipationForm participation) {
+    public Participation update(Long id, ParticipationForm participation) {
         Participation entity = participationRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
         entity.setParticipationDate(participation.getParticipationDate());
         entity.setParticipantFirstName(participation.getParticipantFirstName());
         entity.setParticipantLastName(participation.getParticipantLastName());
         entity.setParticipantEmail(participation.getParticipantEmail());
 
-        participationRepository.save(entity);
+       return participationRepository.save(entity);
     }
 
     @Override

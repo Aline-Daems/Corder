@@ -9,6 +9,6 @@ public interface ParticipationService {
     Participation create(ParticipationForm participation);
     List<Participation> findAll();
     Participation findById(Long id);
-    void update(Long id, ParticipationForm participation);
+    Participation update(Long id, ParticipationForm participation);
     void delete(Long id);
 }
