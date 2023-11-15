@@ -17,21 +17,20 @@ public class UtilFrontServiceImpl implements UtilFrontService {
     }
 
     @Override
-    public void create(UtilFront utilFront) {
+    public UtilFront create(UtilFront utilFront) {
         UtilFront entity = new UtilFront();
         entity.setTypeUtil(utilFront.getTypeUtil());
         entity.setContentUtil(utilFront.getContentUtil());
 
-        utilFrontRepository.save(entity);
-
+        return utilFrontRepository.save(entity);
     }
     @Override
-    public void update(Long id, UtilFront utilFront) {
+    public UtilFront update(Long id, UtilFront utilFront) {
         UtilFront entity = utilFrontRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
         entity.setTypeUtil(utilFront.getTypeUtil());
         entity.setContentUtil(utilFront.getContentUtil());
 
-        utilFrontRepository.save(entity);
+        return utilFrontRepository.save(entity);
     }
 
     @Override

@@ -7,6 +7,7 @@ import be.technobel.corder.pl.models.dtos.ParticipationDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/participation")
@@ -20,7 +21,7 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ParticipationDTO> create (@RequestBody ParticipationForm form) {
+    public ResponseEntity<ParticipationDTO> create (@RequestBody ParticipationForm form, @RequestBody MultipartFile multipartFile) {
        Participation participation = participationService.create(form);
         return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
     }
