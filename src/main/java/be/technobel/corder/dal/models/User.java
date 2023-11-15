@@ -1,8 +1,7 @@
 package be.technobel.corder.dal.models;
 
+import be.technobel.corder.dal.models.enums.Role;
 import jakarta.persistence.*;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "user_")
