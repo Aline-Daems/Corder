@@ -1,8 +1,9 @@
 package be.technobel.corder.dal.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
-import java.sql.Blob;
 import java.time.LocalDate;
 
 @Entity
@@ -17,13 +18,14 @@ public class Participation {
     private String participantEmail;
     @OneToOne
     @JoinColumn(referencedColumnName = "address_id", name = "address_id")
+    @Cascade(CascadeType.PERSIST)
     private Address participantAddress;
     private boolean validated;
     private boolean shipped;
     private String pictureName;
     private String pictureType;
     @Lob
-    private Blob blob;
+    private byte[] blob;
 
     public Participation() {
     }
@@ -104,11 +106,11 @@ public class Participation {
         this.pictureType = pictureType;
     }
 
-    public Blob getBlob() {
+    public byte[] getBlob() {
         return blob;
     }
 
-    public void setBlob(Blob blob) {
+    public void setBlob(byte[] blob) {
         this.blob = blob;
     }
 }

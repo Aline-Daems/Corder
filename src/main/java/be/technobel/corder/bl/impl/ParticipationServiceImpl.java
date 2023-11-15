@@ -1,11 +1,12 @@
 package be.technobel.corder.bl.impl;
 
 import be.technobel.corder.bl.ParticipationService;
+import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
-import jakarta.ws.rs.NotFoundException;
-
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,47 +14,43 @@ import java.util.List;
 public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
+    private final AddressRepository addressRepository;
 
-
-    public ParticipationServiceImpl(ParticipationRepository participationRepository) {
+    public ParticipationServiceImpl(ParticipationRepository participationRepository, AddressRepository addressRepository) {
         this.participationRepository = participationRepository;
+        this.addressRepository = addressRepository;
     }
-
 
     @Override
     public Participation create(ParticipationForm participation) {
-        Participation entity = new Participation();
-        entity.setParticipationDate(participation.getParticipationDate());
-        entity.setParticipantFirstName(participation.getParticipantFirstName());
-        entity.setParticipantLastName(participation.getParticipantLastName());
-        entity.setParticipantEmail(participation.getParticipantEmail());
-        entity.setShipped(participation.isShipped());
-        entity.setValidated(participation.isValidated());
-        entity.setPictureName(participation.getPictureName());
-        entity.setPictureType(participation.getPictureType());
-
-       return participationRepository.save(entity);
-
+       return participationRepository.save(participation.toEntity());
     }
 
     @Override
     public List<Participation> findAll() {
-        List<Participation> participations = participationRepository.findAll();
-        return  participations;
+        return participationRepository.findAll();
     }
 
     @Override
     public Participation findById(Long id) {
-        return participationRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
+        return participationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public Participation update(Long id, ParticipationForm participation) {
-        Participation entity = participationRepository.findById(id).orElseThrow(()-> new NotFoundException("Participation non trouvée"));
-        entity.setParticipationDate(participation.getParticipationDate());
-        entity.setParticipantFirstName(participation.getParticipantFirstName());
-        entity.setParticipantLastName(participation.getParticipantLastName());
-        entity.setParticipantEmail(participation.getParticipantEmail());
+        Participation entity = findById(id);
+        entity.setParticipantFirstName(participation.firstName());
+        entity.setParticipantLastName(participation.lastName());
+        entity.setParticipantEmail(participation.email());
+        Address address = new Address();
+        address.setStreet(participation.street());
+        address.setCity(participation.city());
+        address.setPostCode(participation.postCode());
+        addressRepository.save(address);
+        entity.setParticipantAddress(address);
+        entity.setPictureName(participation.pictureName());
+        entity.setPictureType(participation.pictureType());
+        entity.setBlob(participation.blob());
 
        return participationRepository.save(entity);
     }
@@ -61,5 +58,41 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public void delete(Long id) {
         participationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Participation> findValidated() {
+        return participationRepository.findByValidated(true);
+    }
+
+    @Override
+    public List<Participation> findNonValidated() {
+        return participationRepository.findByValidated(false);
+    }
+
+    @Override
+    public List<Participation> findShipped() {
+        return participationRepository.findByShipped(true);
+    }
+
+    @Override
+    public List<Participation> findNonShipped() {
+        return participationRepository.findByShipped(false);
+    }
+
+    @Override
+    public boolean validate(Long id) {
+        Participation entity = findById(id);
+        entity.setValidated(true);
+        participationRepository.save(entity);
+        return true;
+    }
+
+    @Override
+    public boolean ship(Long id) {
+        Participation entity = findById(id);
+        entity.setShipped(true);
+        participationRepository.save(entity);
+        return true;
     }
 }
