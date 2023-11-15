@@ -6,7 +6,7 @@ import be.technobel.corder.pl.models.forms.ParticipationForm;
 import java.util.List;
 
 public interface ParticipationService {
-    void create(ParticipationForm participation);
+    Participation create(ParticipationForm participation);
     List<Participation> findAll();
     Participation findById(Long id);
     void update(Long id, ParticipationForm participation);

@@ -21,7 +21,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
 
     @Override
-    public void create(ParticipationForm participation) {
+    public Participation create(ParticipationForm participation) {
         Participation entity = new Participation();
         entity.setParticipationDate(participation.getParticipationDate());
         entity.setParticipantFirstName(participation.getParticipantFirstName());
@@ -32,7 +32,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setPictureName(participation.getPictureName());
         entity.setPictureType(participation.getPictureType());
 
-        participationRepository.save(entity);
+       return participationRepository.save(entity);
 
     }
 
