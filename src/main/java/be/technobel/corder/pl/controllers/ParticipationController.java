@@ -27,7 +27,7 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ParticipationDTO> create (@RequestBody ParticipationForm form, @RequestBody MultipartFile multipartFile) {
+    public ResponseEntity<ParticipationDTO> create (@RequestBody ParticipationForm form) {
        Participation participation = participationService.create(form);
         return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
     }
