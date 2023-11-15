@@ -90,12 +90,12 @@ public class ParticipationController {
         participationService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    @PostMapping("/validate/{id}")
+    @PatchMapping("/validate/{id}")
     public ResponseEntity<Boolean> validate(@PathVariable Long id) {
         boolean result = participationService.validate(id);
         return ResponseEntity.ok(result);
     }
-    @PostMapping("/ship/{id}")
+    @PatchMapping("/ship/{id}")
     public ResponseEntity<Boolean> ship(@PathVariable Long id) {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
