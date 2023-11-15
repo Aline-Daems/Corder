@@ -34,7 +34,7 @@ public class AddressServiceImpl implements AddressService {
         entity.setCity(address.getCity());
         entity.setStreet(address.getStreet());
         entity.setPostCode(address.getPostCode());
-       addressRepository.save(address);
+       addressRepository.save(entity);
     }
 
     @Override

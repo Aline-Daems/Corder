@@ -2,8 +2,10 @@ Spring:
   datasource:
     url:  jdbc:postgresql://localhost:5432/corder
     username: postgres
-    password: postgres
+    password: Aa555555
     driver-class-name: org.postgresql.Driver
+server:
+  port: 8081
   jpa:
     hibernate:
         ddl-auto: create
