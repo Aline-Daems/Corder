@@ -7,6 +7,7 @@ import jakarta.ws.rs.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressServiceImpl implements AddressService {
@@ -37,8 +38,8 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public Address findById(Long id) {
-        return addressRepository.findById(id).orElseThrow(()-> new NotFoundException("Adresse non trouvée"));
+    public Optional<Address> findById(Long id) {
+        return addressRepository.findById(id);
     }
 
     @Override

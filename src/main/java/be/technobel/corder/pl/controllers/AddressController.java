@@ -2,6 +2,7 @@ package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.AddressService;
 import be.technobel.corder.dal.models.Address;
+import be.technobel.corder.pl.models.dtos.AddressDTO;
 import jakarta.ws.rs.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,8 +23,8 @@ public class AddressController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Address>> getAllAddress() {
-        return ResponseEntity.ok(addressService.findAll().stream().map(Address::fromEntity).toList());
+    public ResponseEntity<List<AddressDTO>> getAllAddress() {
+        return ResponseEntity.ok(addressService.findAll().stream().map(AddressDTO::fromEntity).toList());
     }
 
     @PostMapping("/create")
@@ -34,8 +35,8 @@ public class AddressController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Address> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(Address.fromEntity(addressService.findById(id).orElseThrow(() -> new NotFoundException("Pas trouvé"))));
+    public ResponseEntity<AddressDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(AddressDTO.fromEntity(addressService.findById(id).orElseThrow(() -> new NotFoundException("Pas trouvé"))));
     }
 
     @PutMapping("/{id}")

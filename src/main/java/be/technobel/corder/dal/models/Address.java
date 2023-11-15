@@ -1,5 +1,6 @@
 package be.technobel.corder.dal.models;
 
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.persistence.*;
 
 @Entity
