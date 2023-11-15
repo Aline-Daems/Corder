@@ -2,12 +2,13 @@ package be.technobel.corder.bl.impl;
 
 import be.technobel.corder.bl.AddressService;
 import be.technobel.corder.dal.models.Address;
-import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.AddressRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import jakarta.ws.rs.NotFoundException;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
