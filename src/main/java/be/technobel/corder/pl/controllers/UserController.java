@@ -2,7 +2,10 @@ package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.UserService;
 import be.technobel.corder.dal.models.User;
+import be.technobel.corder.pl.models.dtos.AuthDTO;
+import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +19,15 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
-    @PostMapping
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/create")
     public void createUser(@RequestBody UserForm user) {
         userService.create(user);
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/login")
+    public AuthDTO login (@RequestBody LoginForm form){
+        return userService.login(form);
     }
 }

@@ -1,8 +1,8 @@
 Spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/corder
+    url:  jdbc:postgresql://localhost:5432/Corder
     username: postgres
-    password: postgres
+    password: Morrigan551!
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
