@@ -22,31 +22,31 @@ public class AddressController {
     }
 
     @GetMapping("/all")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<AddressDTO>> getAllAddress() {
         return ResponseEntity.ok(addressService.findAll().stream().map(AddressDTO::fromEntity).toList());
     }
 
     @PostMapping("/create")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void create(@RequestBody Address address) {
         addressService.create(address);
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AddressDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(AddressDTO.fromEntity(addressService.findById(id).orElseThrow(() -> new NotFoundException("Pas trouvé"))));
     }
 
     @PutMapping("/{id}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void update(@PathVariable Long id, @RequestBody Address address) {
         addressService.update(id, address);
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         addressService.delete(id);
     }
