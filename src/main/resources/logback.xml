@@ -1,0 +1,8 @@
+<configuration status="warn">
+
+    <!-- Autres configurations de logback -->
+
+    <!-- Configuration de débogage pour Spring Security -->
+    <logger name="org.springframework.security" level="DEBUG" />
+
+</configuration>
