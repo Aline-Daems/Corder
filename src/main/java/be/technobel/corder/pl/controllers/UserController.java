@@ -19,7 +19,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public void createUser(@RequestBody UserForm user) {
         userService.create(user);
