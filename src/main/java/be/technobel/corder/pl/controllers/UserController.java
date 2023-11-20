@@ -2,9 +2,14 @@ package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.UserService;
 
+import be.technobel.corder.dal.models.User;
+import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.AuthDTO;
+import be.technobel.corder.pl.models.dtos.UserDTO;
 import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +26,14 @@ public class UserController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public void createUser(@RequestBody UserForm user) {
-        userService.create(user);
+    public ResponseEntity<?> create(@RequestBody UserForm form) {
+        try {
+            User user = userService.create(form);
+            return  ResponseEntity.ok(UserDTO.fromEntity(user));
+        } catch (DuplicateParticipationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     @PreAuthorize("isAnonymous()")

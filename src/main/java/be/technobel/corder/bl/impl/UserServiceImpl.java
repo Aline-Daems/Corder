@@ -5,11 +5,13 @@ import be.technobel.corder.dal.models.User;
 import be.technobel.corder.dal.models.enums.Role;
 import be.technobel.corder.dal.repositories.UserRepository;
 import be.technobel.corder.pl.config.JWTProvider;
+import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.AuthDTO;
 import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,18 +39,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserForm user) {
-        if( user == null)
-            throw  new IllegalArgumentException("Ne peut pas être null");
 
-        User entity = new User();
+        try{
+            if( user == null)
+                throw  new IllegalArgumentException("Ne peut pas être null");
 
-        entity.setFirstName(user.firstName());
-        entity.setLastName(user.lastName());
-        entity.setLogin(user.login());
-        entity.setPassword(passwordEncoder.encode(user.password()));
-        entity.setEmail(user.email());
-        entity.setRole(Role.ADMIN);
-        return  userRepository.save(entity);
+            User entity = new User();
+
+            entity.setFirstName(user.firstName());
+            entity.setLastName(user.lastName());
+            entity.setLogin(user.login());
+            entity.setPassword(passwordEncoder.encode(user.password()));
+            entity.setEmail(user.email());
+            entity.setRole(Role.ADMIN);
+            return  userRepository.save(entity);
+        }catch (DataIntegrityViolationException e)  {
+            throw new DuplicateParticipationException("Ce login ou cet email est déjà enregistré");
+        }
+
 
     }
 

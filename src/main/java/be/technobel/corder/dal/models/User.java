@@ -19,10 +19,12 @@ public class User implements UserDetails {
     private Long id;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String login;
     private String password;
     @Enumerated(value = EnumType.STRING)
     private Role role;
+    @Column(unique = true)
     private String email;
     private boolean enabled;
 
