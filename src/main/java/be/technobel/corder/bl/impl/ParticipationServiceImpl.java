@@ -15,10 +15,12 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
     private final AddressRepository addressRepository;
+    private final EmailServiceImpl emailService;
 
-    public ParticipationServiceImpl(ParticipationRepository participationRepository, AddressRepository addressRepository) {
+    public ParticipationServiceImpl(ParticipationRepository participationRepository, AddressRepository addressRepository, EmailServiceImpl emailService) {
         this.participationRepository = participationRepository;
         this.addressRepository = addressRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -85,6 +87,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Participation entity = findById(id);
         entity.setValidated(true);
         participationRepository.save(entity);
+        emailService.sendMail(findById(id), "Participation validée !", "Bravo, votre participation a été validée !");
         return true;
     }
 
