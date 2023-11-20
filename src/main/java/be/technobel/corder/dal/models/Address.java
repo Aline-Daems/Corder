@@ -4,6 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.persistence.*;
 
 @Entity
+@Table (
+        uniqueConstraints =  @UniqueConstraint(name = "uniqueAdress", columnNames = {
+                "street",
+                "city",
+                "postcode"})
+)
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
