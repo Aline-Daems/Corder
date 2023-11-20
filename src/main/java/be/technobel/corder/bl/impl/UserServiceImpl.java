@@ -88,6 +88,6 @@ public class UserServiceImpl implements UserService {
         System.out.println("coucou");
         User user = userRepository.findByLogin(form.getLogin()).orElseThrow(()-> new NotFoundException("id non trouvée"));
         String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
-        return  new AuthDTO(token, user.getLogin(), user.getRole());
+        return  new AuthDTO(user.getLogin(), token, user.getRole());
     }
 }
