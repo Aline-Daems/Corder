@@ -25,3 +25,5 @@ spring:
           auth: true
           starttls:
             enable: true
+server:
+  port: 8081
