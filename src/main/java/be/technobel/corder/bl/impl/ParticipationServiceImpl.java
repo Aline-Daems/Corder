@@ -5,8 +5,10 @@ import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
+import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,11 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public Participation create(ParticipationForm participation) {
-       return participationRepository.save(participation.toEntity());
+      try{
+          return participationRepository.save(participation.toEntity());
+      }catch (DataIntegrityViolationException e){
+          throw new DuplicateParticipationException("Ce participant a déjà joué !");
+      }
     }
 
     @Override

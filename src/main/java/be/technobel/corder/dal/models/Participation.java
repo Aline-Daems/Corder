@@ -7,6 +7,12 @@ import org.hibernate.annotations.CascadeType;
 import java.time.LocalDate;
 
 @Entity
+@Table (
+        uniqueConstraints =  @UniqueConstraint(name = "uniquePartcipant", columnNames = {
+                "participantFirstname",
+                "participantLastName",
+                "participantEmail"})
+)
 public class Participation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +21,7 @@ public class Participation {
     private LocalDate participationDate;
     private String participantFirstName;
     private String participantLastName;
+    @Column(unique = true)
     private String participantEmail;
     @OneToOne
     @JoinColumn(referencedColumnName = "address_id", name = "address_id")

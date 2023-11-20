@@ -3,8 +3,11 @@ package be.technobel.corder.pl.controllers;
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Participation;
 
+import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.ParticipationDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +27,13 @@ public class ParticipationController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/create")
-    public ResponseEntity<ParticipationDTO> create (@RequestBody ParticipationForm form) {
-       Participation participation = participationService.create(form);
-        return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+    public ResponseEntity<?> create (@RequestBody ParticipationForm form) {
+      try {
+          Participation participation = participationService.create(form);
+          return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+      }catch (DuplicateParticipationException e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+      }
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
