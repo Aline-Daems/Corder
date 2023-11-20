@@ -107,6 +107,4 @@ public class ParticipationController {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
     }
-
-
 }

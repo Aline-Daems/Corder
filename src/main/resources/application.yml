@@ -15,8 +15,8 @@ Spring:
 
 spring:
   mail:
-    host: 127.0.0.1
-    port: 25
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     properties:
