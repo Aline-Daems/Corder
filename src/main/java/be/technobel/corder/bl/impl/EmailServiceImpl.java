@@ -3,6 +3,8 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.dal.models.Participation;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl {
     private final JavaMailSender mailSender;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     public EmailServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -31,7 +34,7 @@ public class EmailServiceImpl {
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            LOGGER.error("An error occurred while sending mail: ", e);
         }
     }
 }
