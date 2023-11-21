@@ -23,7 +23,6 @@ public class UserController {
         this.userService = userService;
     }
   //  @PreAuthorize("hasRole('ADMIN')")
-    @PreAuthorize("isAnonymous()")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserForm form) {
         try {

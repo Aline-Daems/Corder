@@ -25,7 +25,6 @@ public class ParticipationController {
         this.participationService = participationService;
     }
 
-    @PreAuthorize("isAnonymous()")
     @PostMapping("/create")
     public ResponseEntity<?> create (@RequestBody ParticipationForm form) {
       try {
