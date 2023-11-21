@@ -25,11 +25,37 @@ public class ParticipationServiceImpl implements ParticipationService {
         this.emailService = emailService;
     }
 
+    private void isUniqueParticipant(Participation participation) {
+        String name = formatName(participation);
+        String address = formatAddress(participation);
+
+        List<String> names = findAll().stream()
+                .map(this::formatName)
+                .toList();
+
+        List<String> addresses = findAll().stream()
+                .map(this::formatAddress)
+                .toList();
+
+        if (names.contains(name) || addresses.contains(address)) {
+            throw new DuplicateParticipationException("Ce participant a déjà joué !");
+        }
+    }
+
+    private String formatName(Participation participation) {
+        return (participation.getParticipantFirstName() + participation.getParticipantLastName()).trim().toLowerCase();
+    }
+
+    private String formatAddress(Participation participation) {
+        Address Address = participation.getParticipantAddress();
+        return (Address.getStreet() + Address.getCity() + Address.getPostCode()).trim().toLowerCase();
+    }
     @Override
     public Participation create(ParticipationForm participation) {
       try{
+          isUniqueParticipant(participation.toEntity());
           return participationRepository.save(participation.toEntity());
-      }catch (DataIntegrityViolationException e){
+      }catch (DuplicateParticipationException e){
           throw new DuplicateParticipationException("Ce participant a déjà joué !");
       }
     }
