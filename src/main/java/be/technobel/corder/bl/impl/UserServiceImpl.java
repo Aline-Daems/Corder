@@ -1,5 +1,6 @@
 package be.technobel.corder.bl.impl;
 
+import be.technobel.corder.bl.UserCheckService;
 import be.technobel.corder.bl.UserService;
 import be.technobel.corder.dal.models.User;
 import be.technobel.corder.dal.models.enums.Role;
@@ -7,6 +8,7 @@ import be.technobel.corder.dal.repositories.UserRepository;
 import be.technobel.corder.pl.config.JWTProvider;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.AuthDTO;
+import be.technobel.corder.pl.models.dtos.UserDTO;
 import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,16 +26,21 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JWTProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JWTProvider jwtProvider, PasswordEncoder passwordEncoder) {
+    private final UserCheckService userCheckService;
+
+    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JWTProvider jwtProvider, PasswordEncoder passwordEncoder, UserCheckService userCheckService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.passwordEncoder = passwordEncoder;
+        this.userCheckService = userCheckService;
     }
 
 
@@ -96,6 +103,26 @@ public class UserServiceImpl implements UserService {
         System.out.println("coucou");
         User user = userRepository.findByLogin(form.getLogin()).orElseThrow(()-> new NotFoundException("id non trouvée"));
         String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
-        return  new AuthDTO(user.getLogin(), token, user.getRole());
+        return  new AuthDTO( user.getLogin(), token, user.getRole());
     }
+
+    @Override
+    public int changeUserPassword(UserDTO dto, String newPassword, Long id) {
+
+
+        String userPassword = dto.getPassword();
+
+        boolean checkPassword =  userCheckService.isTruePassword(id, userPassword);
+
+        if(checkPassword){
+
+            userRepository.changeUserPassword(passwordEncoder.encode(newPassword) );
+
+            return 1;
+        }
+
+        return 0;
+    }
+
+
 }
