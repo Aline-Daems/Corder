@@ -1,10 +1,14 @@
 package be.technobel.corder.dal.models;
 
+import be.technobel.corder.dal.models.enums.Products;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table (
@@ -33,6 +37,13 @@ public class Participation {
     private String pictureType;
     @Lob
     private byte[] blob;
+
+    @Enumerated(EnumType.STRING)
+    private Products productType;
+    @Min(1)
+    @Max(5)
+    private Long satisfaction;
+
 
     public Participation() {
     }
@@ -119,5 +130,21 @@ public class Participation {
 
     public void setBlob(byte[] blob) {
         this.blob = blob;
+    }
+
+    public Products getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Products productType) {
+        this.productType = productType;
+    }
+
+    public Long getSatisfaction() {
+        return satisfaction;
+    }
+
+    public void setSatisfaction(Long satisfaction) {
+        this.satisfaction = satisfaction;
     }
 }

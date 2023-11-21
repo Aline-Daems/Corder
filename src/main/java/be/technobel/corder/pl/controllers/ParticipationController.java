@@ -113,4 +113,27 @@ public class ParticipationController {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
     }
+
+   // @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/herbicide")
+    public Long findHerbicide (){
+      return  participationService.countHerbicide();
+
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/insecticide")
+    public Long findInsecticide(){
+        return  participationService.countInsecticide();
+
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/fongicide")
+    public Long findFongicide (){
+        return  participationService.countFongicide();
+
+    }
+
 }

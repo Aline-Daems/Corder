@@ -3,6 +3,7 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.models.enums.Products;
 import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
@@ -11,7 +12,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
 
@@ -55,6 +59,7 @@ public class ParticipationServiceImpl implements ParticipationService {
       try{
           isUniqueParticipant(participation.toEntity());
           return participationRepository.save(participation.toEntity());
+
       }catch (DuplicateParticipationException e){
           throw new DuplicateParticipationException("Ce participant a déjà joué !");
       }
@@ -81,6 +86,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         address.setCity(participation.city());
         address.setPostCode(participation.postCode());
         addressRepository.save(address);
+
         entity.setParticipantAddress(address);
         entity.setPictureName(participation.pictureName());
         entity.setPictureType(participation.pictureType());
@@ -129,5 +135,20 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setShipped(true);
         participationRepository.save(entity);
         return true;
+    }
+
+    @Override
+    public Long countInsecticide() {
+       return participationRepository.findbyProductInsec();
+    }
+
+    @Override
+    public Long countHerbicide() {
+        return participationRepository.findbyProductHerbi();
+    }
+
+    @Override
+    public Long countFongicide() {
+        return participationRepository.findbyProductFong();
     }
 }
