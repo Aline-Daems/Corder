@@ -136,4 +136,9 @@ public class ParticipationController {
 
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/nbrparticipations")
+    public Long nbrParticipation(){
+        return  participationService.countParticipation();
+    }
 }

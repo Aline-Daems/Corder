@@ -19,7 +19,8 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'Fongicide'")
     Long findbyProductFong();
 
-
+    @Query("SELECT COUNT (p) from  Participation p ")
+    Long findNbrParticipation();
 
 
 }

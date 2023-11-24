@@ -151,4 +151,9 @@ public class ParticipationServiceImpl implements ParticipationService {
     public Long countFongicide() {
         return participationRepository.findbyProductFong();
     }
+
+    @Override
+    public Long countParticipation() {
+        return participationRepository.findNbrParticipation();
+    }
 }

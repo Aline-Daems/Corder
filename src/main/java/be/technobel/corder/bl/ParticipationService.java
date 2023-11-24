@@ -27,4 +27,6 @@ public interface ParticipationService {
 
     Long countFongicide();
 
+    Long countParticipation();
+
 }
