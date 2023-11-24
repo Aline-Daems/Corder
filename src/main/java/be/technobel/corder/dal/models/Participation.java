@@ -41,7 +41,7 @@ public class Participation {
     @Enumerated(EnumType.STRING)
     private Products productType;
     @Min(1)
-    @Max(5)
+    @Max(3)
     private Long satisfaction;
 
 
