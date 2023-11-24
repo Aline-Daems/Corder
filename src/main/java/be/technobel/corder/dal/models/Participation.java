@@ -1,6 +1,7 @@
 package be.technobel.corder.dal.models;
 
 import be.technobel.corder.dal.models.enums.Products;
+import be.technobel.corder.dal.models.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -31,8 +32,8 @@ public class Participation {
     @JoinColumn(referencedColumnName = "address_id", name = "address_id")
     @Cascade(CascadeType.PERSIST)
     private Address participantAddress;
-    private boolean validated;
-    private boolean shipped;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String pictureName;
     private String pictureType;
     @Lob
@@ -92,21 +93,7 @@ public class Participation {
         this.participantAddress = participantAddress;
     }
 
-    public boolean isValidated() {
-        return validated;
-    }
 
-    public void setValidated(boolean validated) {
-        this.validated = validated;
-    }
-
-    public boolean isShipped() {
-        return shipped;
-    }
-
-    public void setShipped(boolean shipped) {
-        this.shipped = shipped;
-    }
 
     public String getPictureName() {
         return pictureName;
@@ -146,5 +133,13 @@ public class Participation {
 
     public void setSatisfaction(Long satisfaction) {
         this.satisfaction = satisfaction;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

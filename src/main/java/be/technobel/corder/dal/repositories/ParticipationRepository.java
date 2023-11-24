@@ -7,14 +7,22 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation,Long> {
-    List<Participation> findByValidated(boolean validated);
-    List<Participation> findByShipped(boolean shipped);
+    @Query("SELECT p FROM Participation  p WHERE  p.status = 'valid'")
+    List<Participation> findByValidated();
+
+    @Query("SELECT p FROM Participation  p WHERE p.status = 'shipped'")
+    List<Participation> findByShipped();
+
+    @Query("SELECT p FROM Participation  p WHERE p.status = 'pending'")
+    List<Participation> findByPending();
+    @Query("SELECT p FROM Participation  p WHERE p.status = 'denied'")
+    List<Participation> findByDenied();
+
     @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'Insecticide'")
     Long findbyProductInsec();
 
     @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'Herbicide'")
     Long findbyProductHerbi();
-
 
     @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'Fongicide'")
     Long findbyProductFong();

@@ -2,6 +2,7 @@ package be.technobel.corder.pl.models.dtos;
 
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.models.enums.Status;
 
 import java.sql.Blob;
 import java.time.LocalDate;
@@ -13,8 +14,7 @@ public record ParticipationDTO(
         String participantLastName,
         String participantEmail,
         Address participantAddress,
-        boolean validated,
-        boolean shipped,
+        Status status,
         String pictureName,
         String pictureType,
         byte[] blob
@@ -27,8 +27,7 @@ public record ParticipationDTO(
                 participation.getParticipantLastName(),
                 participation.getParticipantEmail(),
                 participation.getParticipantAddress(),
-                participation.isValidated(),
-                participation.isShipped(),
+                participation.getStatus(),
                 participation.getPictureName(),
                 participation.getPictureType(),
                 participation.getBlob()

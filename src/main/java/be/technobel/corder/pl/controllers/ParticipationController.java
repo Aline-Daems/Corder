@@ -69,15 +69,18 @@ public class ParticipationController {
         return ResponseEntity.ok(dtos);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/allNonValidated")
+    @GetMapping("/pending")
     public ResponseEntity<List<ParticipationDTO>> findNonValidated() {
-        List<Participation> participations = participationService.findNonValidated();
+        List<Participation> participations = participationService.findPending();
         List<ParticipationDTO> dtos = participations.stream()
                 .map(ParticipationDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+
     @GetMapping("/allShipped")
     public ResponseEntity<List<ParticipationDTO>> findShipped() {
         List<Participation> participations = participationService.findShipped();
@@ -86,10 +89,12 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/allNonShipped")
+    @GetMapping("/denied")
     public ResponseEntity<List<ParticipationDTO>> findNonShipped() {
-        List<Participation> participations = participationService.findNonShipped();
+        List<Participation> participations = participationService.findDenied();
         List<ParticipationDTO> dtos = participations.stream()
                 .map(ParticipationDTO::fromEntity)
                 .toList();
@@ -101,7 +106,9 @@ public class ParticipationController {
         participationService.delete(id);
         return ResponseEntity.noContent().build();
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+
+  /*  @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/validate/{id}")
     public ResponseEntity<Boolean> validate(@PathVariable Long id) {
         boolean result = participationService.validate(id);
@@ -112,31 +119,32 @@ public class ParticipationController {
     public ResponseEntity<Boolean> ship(@PathVariable Long id) {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
-    }
+    }*/
 
-   // @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/herbicide")
     public Long findHerbicide (){
       return  participationService.countHerbicide();
 
     }
 
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/insecticide")
     public Long findInsecticide(){
         return  participationService.countInsecticide();
 
     }
 
-    @PreAuthorize("isAnonymous()")
+
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/fongicide")
     public Long findFongicide (){
         return  participationService.countFongicide();
 
     }
 
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/nbrparticipations")
     public Long nbrParticipation(){
         return  participationService.countParticipation();

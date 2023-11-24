@@ -9,6 +9,7 @@ import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +88,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         address.setPostCode(participation.postCode());
         addressRepository.save(address);
 
+        entity.setStatus(participation.status());
         entity.setParticipantAddress(address);
         entity.setPictureName(participation.pictureName());
         entity.setPictureType(participation.pictureType());
@@ -101,42 +103,31 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    @Transactional
     public List<Participation> findValidated() {
-        return participationRepository.findByValidated(true);
+        return participationRepository.findByValidated();
     }
 
-    @Override
-    public List<Participation> findNonValidated() {
-        return participationRepository.findByValidated(false);
-    }
+
 
     @Override
+    @Transactional
     public List<Participation> findShipped() {
-        return participationRepository.findByShipped(true);
+        return participationRepository.findByShipped();
+    }
+
+
+    @Override
+    @Transactional
+    public List<Participation> findPending() {
+        return participationRepository.findByPending();
     }
 
     @Override
-    public List<Participation> findNonShipped() {
-        return participationRepository.findByShipped(false);
+    @Transactional
+    public List<Participation> findDenied(){
+        return  participationRepository.findByDenied();
     }
-
-    @Override
-    public boolean validate(Long id) {
-        Participation entity = findById(id);
-        entity.setValidated(true);
-        participationRepository.save(entity);
-        emailService.sendMail(findById(id), "Participation validée !", "Bravo, votre participation a été validée !");
-        return true;
-    }
-
-    @Override
-    public boolean ship(Long id) {
-        Participation entity = findById(id);
-        entity.setShipped(true);
-        participationRepository.save(entity);
-        return true;
-    }
-
     @Override
     public Long countInsecticide() {
        return participationRepository.findbyProductInsec();

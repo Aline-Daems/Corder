@@ -3,6 +3,7 @@ package be.technobel.corder.pl.models.forms;
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Products;
+import be.technobel.corder.dal.models.enums.Status;
 
 import java.sql.Blob;
 import java.time.LocalDate;
@@ -15,10 +16,10 @@ public record ParticipationForm(
         String pictureType,
         byte[] blob,
         Products productType,
+        Status status,
         String street,
         String city,
         String postCode,
-
         Long satisfaction
 ) {
     public Participation toEntity() {
@@ -34,6 +35,7 @@ public record ParticipationForm(
         participation.setParticipantAddress(address);
         participation.setPictureName(pictureName);
         participation.setPictureType(pictureType);
+        participation.setStatus(status);
         participation.setParticipationDate(LocalDate.now());
         participation.setBlob(blob);
         participation.setProductType(productType);

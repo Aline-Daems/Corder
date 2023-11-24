@@ -13,13 +13,15 @@ public interface ParticipationService {
     Participation findById(Long id);
     Participation update(Long id, ParticipationForm participation);
     void delete(Long id);
-
     List<Participation> findValidated();
-    List<Participation> findNonValidated();
-    List<Participation> findShipped();
-    List<Participation> findNonShipped();
-    boolean validate(Long id);
-    boolean ship(Long id);
+
+     List<Participation> findShipped();
+
+    List<Participation> findDenied();
+
+
+    List<Participation> findPending();
+
 
     Long countInsecticide();
 
