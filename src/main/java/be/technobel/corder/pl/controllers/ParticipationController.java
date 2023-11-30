@@ -149,7 +149,7 @@ public class ParticipationController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/validate/{id}")
     public ResponseEntity<Boolean> validate(@PathVariable Long id) {
         boolean result = participationService.validate(id);
@@ -195,4 +195,24 @@ public class ParticipationController {
     public Long nbrParticipation(){
         return  participationService.countParticipation();
     }
+
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/getLastsValidated/{nbr}")
+    public ResponseEntity<List<ParticipationDTO>> getLastsValidated(@PathVariable int nbr) {
+        List<Participation> participations = participationService.getLastsValidated(nbr);
+        List<ParticipationDTO> dtos = participations.stream()
+                .map(ParticipationDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/getLastsNonValidated/{nbr}")
+    public ResponseEntity<List<ParticipationDTO>> getLastsNonValidated(@PathVariable int nbr) {
+        List<Participation> participations = participationService.getLastsNonValidated(nbr);
+        List<ParticipationDTO> dtos = participations.stream()
+                .map(ParticipationDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+
 }

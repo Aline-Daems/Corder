@@ -12,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -70,7 +71,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public Participation findById(Long id) {
-        return participationRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return participationRepository.findById(id).orElseThrow((EntityNotFoundException::new));
     }
 
     @Override
@@ -117,6 +118,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     public Boolean validate(Long id) {
         Participation entity = findById(id);
         entity.setStatus(Status.VALIDATED);
+        entity.setValidatedDate(LocalDateTime.now());
         participationRepository.save(entity);
         return true;
     }
@@ -167,5 +169,17 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public Long countParticipation() {
         return participationRepository.findNbrParticipation();
+    }
+
+    @Override
+    @Transactional
+    public List<Participation> getLastsValidated(int nbr) {
+        return participationRepository.getLastValidated(nbr);
+    }
+
+    @Override
+    @Transactional
+    public List<Participation> getLastsNonValidated(int nbr) {
+        return participationRepository.getLastNonValidated(nbr);
     }
 }

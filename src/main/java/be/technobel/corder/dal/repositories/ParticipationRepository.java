@@ -3,6 +3,7 @@ package be.technobel.corder.dal.repositories;
 import be.technobel.corder.dal.models.Participation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     @Query("SELECT COUNT (p) from  Participation p ")
     Long findNbrParticipation();
-
+    @Query("select p from Participation p where status = 'VALIDATED' order by validatedDate desc limit :nbr")
+    List<Participation> getLastValidated(@Param("nbr") int nbr);
+    @Query("select p from Participation p where status = 'PENDING' order by participationDate desc limit :nbr")
+    List<Participation> getLastNonValidated(@Param("nbr") int nbr);
 
 }

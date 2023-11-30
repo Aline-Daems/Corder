@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table (
@@ -32,11 +33,12 @@ public class Participation {
     private Address participantAddress;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private LocalDateTime validatedDate;
     private String pictureName;
     private String pictureType;
     @Lob
     private byte[] blob;
-
     private String productType;
     @Min(1)
     @Max(3)
@@ -147,5 +149,13 @@ public class Participation {
 
     public void setSatisfactionComment(String satisfactionComment) {
         this.satisfactionComment = satisfactionComment;
+    }
+
+    public LocalDateTime getValidatedDate() {
+        return validatedDate;
+    }
+
+    public void setValidatedDate(LocalDateTime validatedDate) {
+        this.validatedDate = validatedDate;
     }
 }

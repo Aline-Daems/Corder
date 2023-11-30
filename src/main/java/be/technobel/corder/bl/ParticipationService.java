@@ -23,7 +23,6 @@ public interface ParticipationService {
 
     List<Participation> findPending();
 
-
     Long countInsecticide();
 
     Long countHerbicide();
@@ -32,4 +31,6 @@ public interface ParticipationService {
 
     Long countParticipation();
 
+    List<Participation> getLastsValidated(int nbr);
+    List<Participation> getLastsNonValidated(int nbr);
 }
