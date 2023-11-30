@@ -1,11 +1,9 @@
 package be.technobel.corder.bl;
 
 import be.technobel.corder.dal.models.Participation;
-import be.technobel.corder.dal.models.enums.Products;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ParticipationService {
     Participation create(ParticipationForm participation);
@@ -15,7 +13,10 @@ public interface ParticipationService {
     void delete(Long id);
     List<Participation> findValidated();
 
-     List<Participation> findShipped();
+    List<Participation> findShipped();
+    Boolean validate(Long id);
+    Boolean ship(Long id);
+    Boolean denied(Long id);
 
     List<Participation> findDenied();
 

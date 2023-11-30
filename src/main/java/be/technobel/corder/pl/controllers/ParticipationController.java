@@ -108,7 +108,7 @@ public class ParticipationController {
     }
 
 
-  /*  @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/validate/{id}")
     public ResponseEntity<Boolean> validate(@PathVariable Long id) {
         boolean result = participationService.validate(id);
@@ -119,7 +119,14 @@ public class ParticipationController {
     public ResponseEntity<Boolean> ship(@PathVariable Long id) {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
-    }*/
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @PatchMapping("/denied/{id}")
+    public ResponseEntity<Boolean> denied(@PathVariable Long id) {
+        boolean result = participationService.denied(id);
+        return ResponseEntity.ok(result);
+    }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/herbicide")

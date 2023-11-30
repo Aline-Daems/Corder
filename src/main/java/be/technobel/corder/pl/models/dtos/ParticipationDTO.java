@@ -17,6 +17,7 @@ public record ParticipationDTO(
         Status status,
         String pictureName,
         String pictureType,
+        String productType,
         byte[] blob
 ) {
     public static ParticipationDTO fromEntity(Participation participation) {
@@ -30,6 +31,7 @@ public record ParticipationDTO(
                 participation.getStatus(),
                 participation.getPictureName(),
                 participation.getPictureType(),
+                participation.getProductType(),
                 participation.getBlob()
         );
     }

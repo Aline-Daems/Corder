@@ -3,19 +3,16 @@ package be.technobel.corder.bl.impl;
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
-import be.technobel.corder.dal.models.enums.Products;
+import be.technobel.corder.dal.models.enums.Status;
 import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -114,6 +111,30 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Transactional
     public List<Participation> findShipped() {
         return participationRepository.findByShipped();
+    }
+
+    @Override
+    public Boolean validate(Long id) {
+        Participation entity = findById(id);
+        entity.setStatus(Status.VALIDATED);
+        participationRepository.save(entity);
+        return true;
+    }
+
+    @Override
+    public Boolean ship(Long id) {
+        Participation entity = findById(id);
+        entity.setStatus(Status.SHIPPED);
+        participationRepository.save(entity);
+        return true;
+    }
+
+    @Override
+    public Boolean denied(Long id) {
+        Participation entity = findById(id);
+        entity.setStatus(Status.DENIED);
+        participationRepository.save(entity);
+        return true;
     }
 
 

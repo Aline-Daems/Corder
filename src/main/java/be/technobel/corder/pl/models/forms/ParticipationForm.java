@@ -2,10 +2,8 @@ package be.technobel.corder.pl.models.forms;
 
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
-import be.technobel.corder.dal.models.enums.Products;
 import be.technobel.corder.dal.models.enums.Status;
 
-import java.sql.Blob;
 import java.time.LocalDate;
 
 public record ParticipationForm(
@@ -15,7 +13,7 @@ public record ParticipationForm(
         String pictureName,
         String pictureType,
         byte[] blob,
-        Products productType,
+        String productType,
         Status status,
         String street,
         String city,
