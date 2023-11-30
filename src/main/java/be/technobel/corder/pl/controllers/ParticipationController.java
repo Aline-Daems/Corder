@@ -5,8 +5,8 @@ import be.technobel.corder.dal.models.Participation;
 
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.ParticipationDTO;
+import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,6 +59,15 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allNoBlob")
+    public ResponseEntity<List<ParticipationNoBlobDTO>> findAllNoBlob() {
+        List<Participation> participations = participationService.findAll();
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allValidated")
     public ResponseEntity<List<ParticipationDTO>> findValidated() {
@@ -68,8 +77,17 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/allValidatedNoBlob")
+    public ResponseEntity<List<ParticipationNoBlobDTO>> findValidatedNoBlob() {
+        List<Participation> participations = participationService.findValidated();
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/pending")
+    @GetMapping("/allPending")
     public ResponseEntity<List<ParticipationDTO>> findNonValidated() {
         List<Participation> participations = participationService.findPending();
         List<ParticipationDTO> dtos = participations.stream()
@@ -77,10 +95,17 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allPendingNoBlob")
+    public ResponseEntity<List<ParticipationNoBlobDTO>> findNonValidatedNoBlob() {
+        List<Participation> participations = participationService.findPending();
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-
     @GetMapping("/allShipped")
     public ResponseEntity<List<ParticipationDTO>> findShipped() {
         List<Participation> participations = participationService.findShipped();
@@ -89,14 +114,31 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/allShippedNoBlob")
+    public ResponseEntity<List<ParticipationNoBlobDTO>> findShippedNoBlob() {
+        List<Participation> participations = participationService.findShipped();
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/denied")
-    public ResponseEntity<List<ParticipationDTO>> findNonShipped() {
+    @GetMapping("/allDenied")
+    public ResponseEntity<List<ParticipationDTO>> findDenied() {
         List<Participation> participations = participationService.findDenied();
         List<ParticipationDTO> dtos = participations.stream()
                 .map(ParticipationDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(dtos);
+    }
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/allDeniedNoBlob")
+    public ResponseEntity<List<ParticipationNoBlobDTO>> findDeniedNoBlob() {
+        List<Participation> participations = participationService.findDenied();
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
@@ -106,7 +148,6 @@ public class ParticipationController {
         participationService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/validate/{id}")
@@ -141,8 +182,6 @@ public class ParticipationController {
         return  participationService.countInsecticide();
 
     }
-
-
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/fongicide")
