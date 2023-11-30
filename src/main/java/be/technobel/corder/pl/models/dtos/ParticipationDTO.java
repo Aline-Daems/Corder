@@ -18,6 +18,8 @@ public record ParticipationDTO(
         String pictureName,
         String pictureType,
         String productType,
+        int satisfaction,
+        String satisfactionComment,
         byte[] blob
 ) {
     public static ParticipationDTO fromEntity(Participation participation) {
@@ -32,6 +34,8 @@ public record ParticipationDTO(
                 participation.getPictureName(),
                 participation.getPictureType(),
                 participation.getProductType(),
+                participation.getSatisfaction(),
+                participation.getSatisfactionComment(),
                 participation.getBlob()
         );
     }

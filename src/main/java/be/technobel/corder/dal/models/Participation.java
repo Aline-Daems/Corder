@@ -40,7 +40,8 @@ public class Participation {
     private String productType;
     @Min(1)
     @Max(3)
-    private Long satisfaction;
+    private int satisfaction;
+    private String satisfactionComment;
 
 
     public Participation() {
@@ -124,11 +125,11 @@ public class Participation {
         this.productType = productType;
     }
 
-    public Long getSatisfaction() {
+    public int getSatisfaction() {
         return satisfaction;
     }
 
-    public void setSatisfaction(Long satisfaction) {
+    public void setSatisfaction(int satisfaction) {
         this.satisfaction = satisfaction;
     }
 
@@ -138,5 +139,13 @@ public class Participation {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getSatisfactionComment() {
+        return satisfactionComment;
+    }
+
+    public void setSatisfactionComment(String satisfactionComment) {
+        this.satisfactionComment = satisfactionComment;
     }
 }
