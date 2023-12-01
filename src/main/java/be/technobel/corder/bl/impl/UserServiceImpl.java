@@ -98,9 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthDTO login(LoginForm form) {
-        System.out.println("coucou1");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword()));
-        System.out.println("coucou");
         User user = userRepository.findByLogin(form.getLogin()).orElseThrow(()-> new NotFoundException("id non trouvée"));
         String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
         return  new AuthDTO( user.getLogin(), token, user.getRole());
