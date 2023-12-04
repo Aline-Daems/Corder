@@ -19,13 +19,13 @@ public class UtilFrontController {
         this.utilFrontService = utilFrontService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<UtilFront> create (@RequestBody UtilFrontForm form) {
         return ResponseEntity.ok(utilFrontService.create(form.toEntity()));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UtilFront>> getAll () {
         List<UtilFront> utilFronts = utilFrontService.findAll();

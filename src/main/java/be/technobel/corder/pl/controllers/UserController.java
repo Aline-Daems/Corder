@@ -34,13 +34,13 @@ public class UserController {
 
     }
 
-    @PreAuthorize("isAnonymous()")
+    //@PreAuthorize("isAnonymous()")
     @PostMapping("/login")
     public AuthDTO login(@RequestBody LoginForm form) {
         return userService.login(form);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/changePassword/{id}")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable Long id) throws Exception {
 

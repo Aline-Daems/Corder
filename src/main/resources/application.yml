@@ -1,8 +1,8 @@
 Spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/corder
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url:  jdbc:postgresql://192.168.200.103:5432/corder
+    username: postgres
+    password: Cloud@2023
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,13 +17,14 @@ spring:
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: 16f4841f49d2f9
+    password: 570e8bf1b9ab8a
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
 server:
-  port: 8081
+  port: 8080
