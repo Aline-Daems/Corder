@@ -239,8 +239,7 @@ public class ParticipationController {
 
     @GetMapping("getComments")
     public ResponseEntity<List<SatisfactionCommentDTO>> getComments() {
-        Sort sort = Sort.by(Sort.Direction.DESC,"participationDate");
-        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(sort)
+        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(Sort.by(Sort.Direction.DESC,"participationDate"))
                 .stream()
                 .map(SatisfactionCommentDTO::fromEntity)
                 .toList();
