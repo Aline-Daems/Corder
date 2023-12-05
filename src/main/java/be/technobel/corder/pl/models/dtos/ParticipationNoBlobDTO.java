@@ -18,7 +18,8 @@ public record ParticipationNoBlobDTO(
         String pictureType,
         String productType,
         int satisfaction,
-        String satisfactionComment
+        String satisfactionComment,
+        boolean acceptNewsletter
 ) {
     public static ParticipationNoBlobDTO fromEntity(Participation participation) {
         return new ParticipationNoBlobDTO(
@@ -33,7 +34,8 @@ public record ParticipationNoBlobDTO(
                 participation.getPictureType(),
                 participation.getProductType(),
                 participation.getSatisfaction(),
-                participation.getSatisfactionComment()
+                participation.getSatisfactionComment(),
+                participation.isAcceptNewsletter()
         );
     }
 }

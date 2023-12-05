@@ -44,6 +44,7 @@ public class Participation {
     @Max(3)
     private int satisfaction;
     private String satisfactionComment;
+    private boolean acceptNewsletter;
 
 
     public Participation() {
@@ -157,5 +158,17 @@ public class Participation {
 
     public void setValidatedDate(LocalDateTime validatedDate) {
         this.validatedDate = validatedDate;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isAcceptNewsletter() {
+        return acceptNewsletter;
+    }
+
+    public void setAcceptNewsletter(boolean acceptNewsletter) {
+        this.acceptNewsletter = acceptNewsletter;
     }
 }

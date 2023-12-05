@@ -19,7 +19,8 @@ public record ParticipationForm(
         String city,
         String postCode,
         int satisfaction,
-        String satisfactionComment
+        String satisfactionComment,
+        boolean acceptNewsletter
 ) {
     public Participation toEntity() {
         Participation participation = new Participation();
@@ -40,6 +41,7 @@ public record ParticipationForm(
         participation.setProductType(productType);
         participation.setSatisfaction(satisfaction);
         participation.setSatisfactionComment(satisfactionComment);
+        participation.setAcceptNewsletter(acceptNewsletter);
         return participation;
     }
 }
