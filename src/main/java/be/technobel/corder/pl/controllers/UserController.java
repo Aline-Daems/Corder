@@ -26,8 +26,8 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserForm form) {
         try {
-            User user = userService.create(form);
-            return  ResponseEntity.ok(UserDTO.fromEntity(user));
+            userService.create(form);
+            return  ResponseEntity.ok("User created");
         } catch (DuplicateParticipationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
