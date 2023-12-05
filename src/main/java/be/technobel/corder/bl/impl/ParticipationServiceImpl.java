@@ -8,6 +8,7 @@ import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
+import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public Participation update(Long id, ParticipationForm participation) {
+        //TODO: tout vérifier avant de odifier si on a le temps
         Participation entity = findById(id);
         entity.setParticipantFirstName(participation.firstName());
         entity.setParticipantLastName(participation.lastName());
@@ -93,6 +95,14 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setBlob(participation.blob());
 
        return participationRepository.save(entity);
+    }
+
+    @Override
+    public Participation updateSatisfaction(SatisfactionForm satisfactionForm) {
+        Participation entity = findById(satisfactionForm.id());
+        entity.setSatisfaction(satisfactionForm.satisfaction());
+        entity.setSatisfactionComment(satisfactionForm.satisfactionComment());
+        return participationRepository.save(entity);
     }
 
     @Override

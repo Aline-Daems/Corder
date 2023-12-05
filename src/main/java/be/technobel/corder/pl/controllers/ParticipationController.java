@@ -8,6 +8,7 @@ import be.technobel.corder.pl.models.dtos.ParticipationDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationIdDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
+import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +35,15 @@ public class ParticipationController {
       }catch (DuplicateParticipationException e) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
       }
+    }
+    @PostMapping("/createSatisfaction")
+    public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
+        try {
+            Participation participation = participationService.updateSatisfaction(form);
+            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+        }catch (DuplicateParticipationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
     //@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
@@ -215,5 +225,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+
 
 }

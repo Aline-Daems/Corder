@@ -2,6 +2,7 @@ package be.technobel.corder.bl;
 
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
+import be.technobel.corder.pl.models.forms.SatisfactionForm;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ public interface ParticipationService {
     List<Participation> findAll();
     Participation findById(Long id);
     Participation update(Long id, ParticipationForm participation);
+    Participation updateSatisfaction(SatisfactionForm satisfactionForm);
     void delete(Long id);
     List<Participation> findValidated();
 
