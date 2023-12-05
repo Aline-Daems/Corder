@@ -5,6 +5,7 @@ import be.technobel.corder.dal.models.Participation;
 
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.ParticipationDTO;
+import be.technobel.corder.pl.models.dtos.ParticipationIdDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class ParticipationController {
     public ResponseEntity<?> create (@RequestBody ParticipationForm form) {
       try {
           Participation participation = participationService.create(form);
-          return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+          return ResponseEntity.ok(ParticipationIdDTO.fromEntity(participation));
       }catch (DuplicateParticipationException e) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
       }
