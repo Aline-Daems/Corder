@@ -11,6 +11,9 @@ import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,24 +33,16 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     private void isUniqueParticipant(Participation participation) {
-        String name = formatName(participation);
+        //TODO: vérifier le mail
         String address = formatAddress(participation);
-
-        List<String> names = findAll().stream()
-                .map(this::formatName)
-                .toList();
 
         List<String> addresses = findAll().stream()
                 .map(this::formatAddress)
                 .toList();
 
-        if (names.contains(name) || addresses.contains(address)) {
+        if (addresses.contains(address)) {
             throw new DuplicateParticipationException("Ce participant a déjà joué !");
         }
-    }
-
-    private String formatName(Participation participation) {
-        return (participation.getParticipantFirstName() + participation.getParticipantLastName()).trim().toLowerCase();
     }
 
     private String formatAddress(Participation participation) {
@@ -68,6 +63,16 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public List<Participation> findAll() {
         return participationRepository.findAll();
+    }
+
+    @Override
+    public Page<Participation> findAll(Pageable pageable) {
+        return participationRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Participation> findAll(Sort sort) {
+        return participationRepository.findAll(sort);
     }
 
     @Override

@@ -7,8 +7,12 @@ import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.ParticipationDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationIdDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
+import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,6 +74,13 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allByPage")
+    public ResponseEntity<Page<ParticipationNoBlobDTO>> findAllByPage(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "20") int size) {
+        return ResponseEntity.ok(participationService.findAll(PageRequest.of(page, size, Sort.by("participationDate").descending())).map(ParticipationNoBlobDTO::fromEntity));
+    }
+
     //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findAllNoBlob() {
@@ -224,6 +235,16 @@ public class ParticipationController {
                 .map(ParticipationDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("getComments")
+    public ResponseEntity<List<SatisfactionCommentDTO>> getComments() {
+        Sort sort = Sort.by(Sort.Direction.DESC,"participationDate");
+        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(sort)
+                .stream()
+                .map(SatisfactionCommentDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(satisfactionCommentDTOList);
     }
 
 

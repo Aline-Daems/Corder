@@ -3,12 +3,17 @@ package be.technobel.corder.bl;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 public interface ParticipationService {
     Participation create(ParticipationForm participation);
     List<Participation> findAll();
+    Page<Participation> findAll(Pageable pageable);
+    List<Participation> findAll(Sort sort);
     Participation findById(Long id);
     Participation update(Long id, ParticipationForm participation);
     Participation updateSatisfaction(SatisfactionForm satisfactionForm);

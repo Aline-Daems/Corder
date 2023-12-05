@@ -35,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws  Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(c -> corsConfigurationSource())
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll());
 
         return http.build();
@@ -50,7 +50,7 @@ public class SecurityConfig {
 
         config.setAllowedHeaders(Arrays.asList("*"));
 
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         source.registerCorsConfiguration("/**", config);
         return source;
