@@ -10,14 +10,16 @@ import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
 import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @RestController
@@ -40,6 +42,30 @@ public class ParticipationController {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
       }
     }
+
+    @PostMapping("/addPhoto")
+    public ResponseEntity<ParticipationDTO> addPhoto(@RequestParam("id") Long id, @RequestParam("file") MultipartFile photo) {
+        try {
+            Participation participation = participationService.addPhoto(photo, id);
+            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getPhoto")
+    public ResponseEntity<?> getPhoto(@RequestParam("id") Long id) {
+        Participation participation = participationService.findById(id);
+        if (participation != null && participation.getBlob() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(participation.getPictureType()));
+            headers.setContentDisposition(ContentDisposition.builder("attachment").filename(participation.getPictureName()).build());
+            return new ResponseEntity<>(participation.getBlob(), headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/createSatisfaction")
     public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
         try {

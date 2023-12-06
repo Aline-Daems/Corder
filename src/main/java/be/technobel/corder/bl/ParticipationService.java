@@ -6,6 +6,7 @@ import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -41,4 +42,6 @@ public interface ParticipationService {
 
     List<Participation> getLastsValidated(int nbr);
     List<Participation> getLastsNonValidated(int nbr);
+
+    Participation addPhoto(MultipartFile photo, Long id);
 }

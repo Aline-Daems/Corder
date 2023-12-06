@@ -10,9 +10,6 @@ public record ParticipationForm(
         String firstName,
         String lastName,
         String email,
-        String pictureName,
-        String pictureType,
-        byte[] blob,
         String productType,
         Status status,
         String street,
@@ -33,11 +30,8 @@ public record ParticipationForm(
         participation.setParticipantLastName(lastName);
         participation.setParticipantEmail(email);
         participation.setParticipantAddress(address);
-        participation.setPictureName(pictureName);
-        participation.setPictureType(pictureType);
         participation.setStatus(status);
         participation.setParticipationDate(LocalDate.now());
-        participation.setBlob(blob);
         participation.setProductType(productType.toLowerCase());
         participation.setSatisfaction(satisfaction);
         participation.setSatisfactionComment(satisfactionComment);
