@@ -4,7 +4,6 @@ import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Status;
-import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
@@ -23,12 +22,10 @@ import java.util.List;
 public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
-    private final AddressRepository addressRepository;
     private final EmailServiceImpl emailService;
 
-    public ParticipationServiceImpl(ParticipationRepository participationRepository, AddressRepository addressRepository, EmailServiceImpl emailService) {
+    public ParticipationServiceImpl(ParticipationRepository participationRepository, EmailServiceImpl emailService) {
         this.participationRepository = participationRepository;
-        this.addressRepository = addressRepository;
         this.emailService = emailService;
     }
 
@@ -91,7 +88,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         address.setStreet(participation.street());
         address.setCity(participation.city());
         address.setPostCode(participation.postCode());
-        addressRepository.save(address);
+        entity.setParticipantAddress(address);
 
         entity.setStatus(participation.status());
         entity.setParticipantAddress(address);
