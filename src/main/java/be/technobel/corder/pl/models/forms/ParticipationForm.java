@@ -38,7 +38,7 @@ public record ParticipationForm(
         participation.setStatus(status);
         participation.setParticipationDate(LocalDate.now());
         participation.setBlob(blob);
-        participation.setProductType(productType);
+        participation.setProductType(productType.toLowerCase());
         participation.setSatisfaction(satisfaction);
         participation.setSatisfactionComment(satisfactionComment);
         participation.setAcceptNewsletter(acceptNewsletter);

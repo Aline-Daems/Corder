@@ -187,6 +187,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    public List<String> findAllOtherProductType() {
+        return participationRepository.findAllOtherProductType();
+    }
+
+    @Override
     @Transactional
     public List<Participation> getLastsValidated(int nbr) {
         return participationRepository.getLastValidated(nbr);

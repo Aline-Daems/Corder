@@ -193,29 +193,32 @@ public class ParticipationController {
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/herbicide")
-    public Long findHerbicide (){
-      return  participationService.countHerbicide();
-
+    public ResponseEntity<Long> findHerbicide (){
+      return  ResponseEntity.ok(participationService.countHerbicide());
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/insecticide")
-    public Long findInsecticide(){
-        return  participationService.countInsecticide();
+    public ResponseEntity<Long> findInsecticide(){
+        return  ResponseEntity.ok(participationService.countInsecticide());
 
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/fongicide")
-    public Long findFongicide (){
-        return  participationService.countFongicide();
+    public ResponseEntity<Long> findFongicide (){
+        return  ResponseEntity.ok(participationService.countFongicide());
+    }
 
+    @GetMapping("/findAllOtherProductType")
+    public ResponseEntity<List<String>> findAllOtherProductType() {
+        return ResponseEntity.ok(participationService.findAllOtherProductType());
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/nbrparticipations")
-    public Long nbrParticipation(){
-        return  participationService.countParticipation();
+    public ResponseEntity<Long> nbrParticipation(){
+        return ResponseEntity.ok(participationService.countParticipation());
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")

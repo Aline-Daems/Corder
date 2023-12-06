@@ -27,7 +27,6 @@ public interface ParticipationService {
 
     List<Participation> findDenied();
 
-
     List<Participation> findPending();
 
     Long countInsecticide();
@@ -37,6 +36,8 @@ public interface ParticipationService {
     Long countFongicide();
 
     Long countParticipation();
+
+    List<String> findAllOtherProductType();
 
     List<Participation> getLastsValidated(int nbr);
     List<Participation> getLastsNonValidated(int nbr);
