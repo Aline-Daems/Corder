@@ -20,7 +20,8 @@ public record ParticipationDTO(
         String productType,
         int satisfaction,
         String satisfactionComment,
-        byte[] blob
+        byte[] blob,
+        boolean acceptNewsletter
 ) {
     public static ParticipationDTO fromEntity(Participation participation) {
         return new ParticipationDTO(
@@ -36,7 +37,8 @@ public record ParticipationDTO(
                 participation.getProductType(),
                 participation.getSatisfaction(),
                 participation.getSatisfactionComment(),
-                participation.getBlob()
+                participation.getBlob(),
+                participation.isAcceptNewsletter()
         );
     }
 }

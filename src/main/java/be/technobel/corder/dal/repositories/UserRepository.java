@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    @Query("SELECT u from User u WHERE u.login = :login")
     Optional<User> findByLogin(String login);
-    boolean existsByLogin(String login);
     Optional<User> findById(Long id);
 
     void deleteById(Long id);

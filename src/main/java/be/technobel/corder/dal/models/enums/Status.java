@@ -5,6 +5,5 @@ public enum Status {
     PENDING,
     VALIDATED,
     DENIED,
-    SHIPPED,
-
+    SHIPPED
 }

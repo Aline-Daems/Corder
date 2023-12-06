@@ -10,16 +10,14 @@ public record ParticipationForm(
         String firstName,
         String lastName,
         String email,
-        String pictureName,
-        String pictureType,
-        byte[] blob,
         String productType,
         Status status,
         String street,
         String city,
         String postCode,
         int satisfaction,
-        String satisfactionComment
+        String satisfactionComment,
+        boolean acceptNewsletter
 ) {
     public Participation toEntity() {
         Participation participation = new Participation();
@@ -32,14 +30,12 @@ public record ParticipationForm(
         participation.setParticipantLastName(lastName);
         participation.setParticipantEmail(email);
         participation.setParticipantAddress(address);
-        participation.setPictureName(pictureName);
-        participation.setPictureType(pictureType);
         participation.setStatus(status);
         participation.setParticipationDate(LocalDate.now());
-        participation.setBlob(blob);
-        participation.setProductType(productType);
+        participation.setProductType(productType.toLowerCase());
         participation.setSatisfaction(satisfaction);
         participation.setSatisfactionComment(satisfactionComment);
+        participation.setAcceptNewsletter(acceptNewsletter);
         return participation;
     }
 }

@@ -5,13 +5,21 @@ import be.technobel.corder.dal.models.Participation;
 
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.ParticipationDTO;
+import be.technobel.corder.pl.models.dtos.ParticipationIdDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
+import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import be.technobel.corder.pl.models.forms.SatisfactionForm;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 @RestController
@@ -29,18 +37,51 @@ public class ParticipationController {
     public ResponseEntity<?> create (@RequestBody ParticipationForm form) {
       try {
           Participation participation = participationService.create(form);
-          return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+          return ResponseEntity.ok(ParticipationIdDTO.fromEntity(participation));
       }catch (DuplicateParticipationException e) {
           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
       }
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @PostMapping("/addPhoto")
+    public ResponseEntity<ParticipationDTO> addPhoto(@RequestParam("id") Long id, @RequestParam("file") MultipartFile photo) {
+        try {
+            Participation participation = participationService.addPhoto(photo, id);
+            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getPhoto")
+    public ResponseEntity<?> getPhoto(@RequestParam("id") Long id) {
+        Participation participation = participationService.findById(id);
+        if (participation != null && participation.getBlob() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.parseMediaType(participation.getPictureType()));
+            headers.setContentDisposition(ContentDisposition.builder("attachment").filename(participation.getPictureName()).build());
+            return new ResponseEntity<>(participation.getBlob(), headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/createSatisfaction")
+    public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
+        try {
+            Participation participation = participationService.updateSatisfaction(form);
+            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+        }catch (DuplicateParticipationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+    //@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ParticipationDTO> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
       Participation participation =  participationService.update(id, participationForm);
       return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findById/{id}")
     public ResponseEntity<ParticipationDTO> findById(@PathVariable Long id) {
         Participation participation = participationService.findById(id);
@@ -50,7 +91,7 @@ public class ParticipationController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<ParticipationDTO>> findAll() {
         List<Participation> participations = participationService.findAll();
@@ -59,7 +100,14 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    //@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/allByPage")
+    public ResponseEntity<Page<ParticipationNoBlobDTO>> findAllByPage(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "20") int size) {
+        return ResponseEntity.ok(participationService.findAll(PageRequest.of(page, size, Sort.by("participationDate").descending())).map(ParticipationNoBlobDTO::fromEntity));
+    }
+
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findAllNoBlob() {
         List<Participation> participations = participationService.findAll();
@@ -68,7 +116,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allValidated")
     public ResponseEntity<List<ParticipationDTO>> findValidated() {
         List<Participation> participations = participationService.findValidated();
@@ -77,7 +125,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allValidatedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findValidatedNoBlob() {
         List<Participation> participations = participationService.findValidated();
@@ -86,7 +134,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allPending")
     public ResponseEntity<List<ParticipationDTO>> findNonValidated() {
         List<Participation> participations = participationService.findPending();
@@ -95,7 +143,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/allPendingNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findNonValidatedNoBlob() {
         List<Participation> participations = participationService.findPending();
@@ -105,7 +153,7 @@ public class ParticipationController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allShipped")
     public ResponseEntity<List<ParticipationDTO>> findShipped() {
         List<Participation> participations = participationService.findShipped();
@@ -114,7 +162,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allShippedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findShippedNoBlob() {
         List<Participation> participations = participationService.findShipped();
@@ -124,7 +172,7 @@ public class ParticipationController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allDenied")
     public ResponseEntity<List<ParticipationDTO>> findDenied() {
         List<Participation> participations = participationService.findDenied();
@@ -133,7 +181,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allDeniedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findDeniedNoBlob() {
         List<Participation> participations = participationService.findDenied();
@@ -142,7 +190,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         participationService.delete(id);
@@ -155,45 +203,48 @@ public class ParticipationController {
         boolean result = participationService.validate(id);
         return ResponseEntity.ok(result);
     }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PatchMapping("/ship/{id}")
     public ResponseEntity<Boolean> ship(@PathVariable Long id) {
         boolean result = participationService.ship(id);
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PatchMapping("/denied/{id}")
     public ResponseEntity<Boolean> denied(@PathVariable Long id) {
         boolean result = participationService.denied(id);
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/herbicide")
-    public Long findHerbicide (){
-      return  participationService.countHerbicide();
-
+    public ResponseEntity<Long> findHerbicide (){
+      return  ResponseEntity.ok(participationService.countHerbicide());
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/insecticide")
-    public Long findInsecticide(){
-        return  participationService.countInsecticide();
+    public ResponseEntity<Long> findInsecticide(){
+        return  ResponseEntity.ok(participationService.countInsecticide());
 
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/fongicide")
-    public Long findFongicide (){
-        return  participationService.countFongicide();
-
+    public ResponseEntity<Long> findFongicide (){
+        return  ResponseEntity.ok(participationService.countFongicide());
     }
 
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/findAllOtherProductType")
+    public ResponseEntity<List<String>> findAllOtherProductType() {
+        return ResponseEntity.ok(participationService.findAllOtherProductType());
+    }
+
+    //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/nbrparticipations")
-    public Long nbrParticipation(){
-        return  participationService.countParticipation();
+    public ResponseEntity<Long> nbrParticipation(){
+        return ResponseEntity.ok(participationService.countParticipation());
     }
 
     //@PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
@@ -214,5 +265,16 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("getComments")
+    public ResponseEntity<List<SatisfactionCommentDTO>> getComments() {
+        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(Sort.by(Sort.Direction.DESC,"participationDate"))
+                .stream()
+                .map(SatisfactionCommentDTO::fromEntity)
+                .toList();
+        return ResponseEntity.ok(satisfactionCommentDTOList);
+    }
+
+
 
 }

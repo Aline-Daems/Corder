@@ -4,14 +4,19 @@ import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Status;
-import be.technobel.corder.dal.repositories.AddressRepository;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
+import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,34 +24,25 @@ import java.util.List;
 public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
-    private final AddressRepository addressRepository;
+    //TODO: remettre en place les mails ??
     private final EmailServiceImpl emailService;
 
-    public ParticipationServiceImpl(ParticipationRepository participationRepository, AddressRepository addressRepository, EmailServiceImpl emailService) {
+    public ParticipationServiceImpl(ParticipationRepository participationRepository, EmailServiceImpl emailService) {
         this.participationRepository = participationRepository;
-        this.addressRepository = addressRepository;
         this.emailService = emailService;
     }
 
     private void isUniqueParticipant(Participation participation) {
-        String name = formatName(participation);
+        //TODO: vérifier le mail
         String address = formatAddress(participation);
-
-        List<String> names = findAll().stream()
-                .map(this::formatName)
-                .toList();
 
         List<String> addresses = findAll().stream()
                 .map(this::formatAddress)
                 .toList();
 
-        if (names.contains(name) || addresses.contains(address)) {
+        if (addresses.contains(address)) {
             throw new DuplicateParticipationException("Ce participant a déjà joué !");
         }
-    }
-
-    private String formatName(Participation participation) {
-        return (participation.getParticipantFirstName() + participation.getParticipantLastName()).trim().toLowerCase();
     }
 
     private String formatAddress(Participation participation) {
@@ -70,12 +66,23 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    public Page<Participation> findAll(Pageable pageable) {
+        return participationRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Participation> findAll(Sort sort) {
+        return participationRepository.findAll(sort);
+    }
+
+    @Override
     public Participation findById(Long id) {
         return participationRepository.findById(id).orElseThrow((EntityNotFoundException::new));
     }
 
     @Override
     public Participation update(Long id, ParticipationForm participation) {
+        //TODO: tout vérifier avant de modifier si on a le temps
         Participation entity = findById(id);
         entity.setParticipantFirstName(participation.firstName());
         entity.setParticipantLastName(participation.lastName());
@@ -84,15 +91,20 @@ public class ParticipationServiceImpl implements ParticipationService {
         address.setStreet(participation.street());
         address.setCity(participation.city());
         address.setPostCode(participation.postCode());
-        addressRepository.save(address);
+        entity.setParticipantAddress(address);
 
         entity.setStatus(participation.status());
         entity.setParticipantAddress(address);
-        entity.setPictureName(participation.pictureName());
-        entity.setPictureType(participation.pictureType());
-        entity.setBlob(participation.blob());
 
        return participationRepository.save(entity);
+    }
+
+    @Override
+    public Participation updateSatisfaction(SatisfactionForm satisfactionForm) {
+        Participation entity = findById(satisfactionForm.id());
+        entity.setSatisfaction(satisfactionForm.satisfaction());
+        entity.setSatisfactionComment(satisfactionForm.satisfactionComment());
+        return participationRepository.save(entity);
     }
 
     @Override
@@ -172,6 +184,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    public List<String> findAllOtherProductType() {
+        return participationRepository.findAllOtherProductType();
+    }
+
+    @Override
     @Transactional
     public List<Participation> getLastsValidated(int nbr) {
         return participationRepository.getLastValidated(nbr);
@@ -181,5 +198,18 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Transactional
     public List<Participation> getLastsNonValidated(int nbr) {
         return participationRepository.getLastNonValidated(nbr);
+    }
+
+    @Override
+    public Participation addPhoto(MultipartFile photo, Long id) {
+        try {
+            Participation entity = findById(id);
+            entity.setBlob(photo.getBytes());
+            entity.setPictureName(photo.getOriginalFilename());
+            entity.setPictureType(photo.getContentType());
+            return participationRepository.save(entity);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to add photo to participation with id: " + id, e);
+        }
     }
 }

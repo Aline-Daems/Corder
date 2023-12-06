@@ -13,10 +13,14 @@ import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserCheckService userCheckService;
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, JWTProvider jwtProvider, PasswordEncoder passwordEncoder, UserCheckService userCheckService) {
         this.userRepository = userRepository;
@@ -98,10 +103,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthDTO login(LoginForm form) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword()));
-        User user = userRepository.findByLogin(form.getLogin()).orElseThrow(()-> new NotFoundException("id non trouvée"));
-        String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
-        return  new AuthDTO( user.getLogin(), token, user.getRole());
+
+        if (form == null) {
+            throw new IllegalArgumentException("LoginForm cannot be null");
+        }
+
+        try {
+            logger.info("Attempting to authenticate user: {}", form.getLogin());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword()));
+
+            User user = userRepository.findByLogin(form.getLogin()).orElseThrow(() -> new NotFoundException("User not found"));
+
+            logger.info("User: {} authenticated successfully", form.getLogin());
+
+            String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
+
+            return new AuthDTO(user.getLogin(), token, user.getRole());
+
+        } catch (AuthenticationException e) {
+            logger.error("Failed to authenticate user: {}", form.getLogin());
+            throw new AuthenticationServiceException("Failed to authenticate.", e);
+        }
     }
 
     @Override
