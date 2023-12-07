@@ -1,6 +1,7 @@
 package be.technobel.corder.bl;
 
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.models.enums.Status;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import org.springframework.data.domain.Page;
@@ -40,8 +41,11 @@ public interface ParticipationService {
 
     List<String> findAllOtherProductType();
 
-    List<Participation> getLastsValidated(int nbr);
-    List<Participation> getLastsNonValidated(int nbr);
+    List<Participation> getLasts3Validated();
+    List<Participation> getLasts3NonValidated();
 
     Participation addPhoto(MultipartFile photo, Long id);
+
+    Page<Participation> findAllByStatus(Status status, Pageable pageable);
+    Long countBySatisfaction(int satisfaction);
 }

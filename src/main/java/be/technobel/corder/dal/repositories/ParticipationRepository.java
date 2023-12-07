@@ -1,7 +1,10 @@
 package be.technobel.corder.dal.repositories;
 
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.models.enums.Status;
 import jakarta.mail.Part;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,9 +36,12 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     @Query("SELECT COUNT (p) from  Participation p ")
     Long findNbrParticipation();
-    @Query("select p from Participation p where status = 'VALIDATED' order by validatedDate desc limit :nbr")
-    List<Participation> getLastValidated(@Param("nbr") int nbr);
-    @Query("select p from Participation p where status = 'PENDING' order by participationDate desc limit :nbr")
-    List<Participation> getLastNonValidated(@Param("nbr") int nbr);
+    @Query("select p from Participation p where p.status = 'VALIDATED' order by p.validatedDate desc limit 3")
+    List<Participation> getLast3Validated();
+    @Query("select p from Participation p where p.status = 'PENDING' order by p.participationDate desc limit 3")
+    List<Participation> getLast3NonValidated();
 
+    Page<Participation> findAllByStatus(Status status, Pageable pageable);
+
+    Long countBySatisfaction(int satisfaction);
 }

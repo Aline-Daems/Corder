@@ -190,14 +190,14 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     @Transactional
-    public List<Participation> getLastsValidated(int nbr) {
-        return participationRepository.getLastValidated(nbr);
+    public List<Participation> getLasts3Validated() {
+        return participationRepository.getLast3Validated();
     }
 
     @Override
     @Transactional
-    public List<Participation> getLastsNonValidated(int nbr) {
-        return participationRepository.getLastNonValidated(nbr);
+    public List<Participation> getLasts3NonValidated() {
+        return participationRepository.getLast3NonValidated();
     }
 
     @Override
@@ -211,5 +211,15 @@ public class ParticipationServiceImpl implements ParticipationService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to add photo to participation with id: " + id, e);
         }
+    }
+
+    @Override
+    public Page<Participation> findAllByStatus(Status status, Pageable pageable) {
+        return participationRepository.findAllByStatus(status, pageable);
+    }
+
+    @Override
+    public Long countBySatisfaction(int satisfaction) {
+        return participationRepository.countBySatisfaction(satisfaction);
     }
 }

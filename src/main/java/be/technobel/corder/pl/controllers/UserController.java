@@ -22,25 +22,24 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-  //  @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserForm form) {
         try {
-            userService.create(form);
-            return  ResponseEntity.ok("User created");
+            return ResponseEntity.ok(userService.create(form));
         } catch (DuplicateParticipationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }
 
-    //@PreAuthorize("isAnonymous()")
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
     public AuthDTO login(@RequestBody LoginForm form) {
         return userService.login(form);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/changePassword/{id}")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable Long id) throws Exception {
 
