@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation,Long> {
-    @Query("SELECT p FROM Participation  p WHERE  p.status = 'VALID'")
+    @Query("SELECT p FROM Participation  p WHERE  p.status = 'VALIDATED'")
     List<Participation> findByValidated();
     @Query("SELECT p FROM Participation  p WHERE p.status = 'SHIPPED'")
     List<Participation> findByShipped();
