@@ -17,7 +17,7 @@ public class Address {
     private Long id;
     private String street;
     private String city;
-    private String postCode;
+    private int postCode;
 
     public Address() {
     }
@@ -42,11 +42,11 @@ public class Address {
         this.city = city;
     }
 
-    public String getPostCode() {
+    public int getPostCode() {
         return postCode;
     }
 
-    public void setPostCode(String postCode) {
+    public void setPostCode(int postCode) {
         this.postCode = postCode;
     }
 }

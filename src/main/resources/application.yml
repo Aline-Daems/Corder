@@ -1,12 +1,12 @@
 Spring:
   datasource:
-    url:  jdbc:postgresql://192.168.200.103:5432/corder
+    url:  jdbc:postgresql://localhost:5432/corder
     username: postgres
-    password: Cloud@2023
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     database: postgresql
     properties:

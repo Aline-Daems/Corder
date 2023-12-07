@@ -18,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -221,5 +223,16 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     public Long countBySatisfaction(int satisfaction) {
         return participationRepository.countBySatisfaction(satisfaction);
+    }
+
+    @Override
+    public Map<String, Integer> countParticipationByProvince() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Brabant wallon", participationRepository.countParticipationByProvince(1300, 1499));
+        map.put("Liège", participationRepository.countParticipationByProvince(4000, 4999));
+        map.put("Namur", participationRepository.countParticipationByProvince(5000, 5680));
+        map.put("Hainaut", participationRepository.countParticipationByProvince(6000, 6599) + participationRepository.countParticipationByProvince(7000, 7999));
+        map.put("Luxembourg", participationRepository.countParticipationByProvince(6600, 6999));
+        return map;
     }
 }

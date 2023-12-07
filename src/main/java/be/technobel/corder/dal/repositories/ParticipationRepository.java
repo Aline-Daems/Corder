@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ParticipationRepository extends JpaRepository<Participation,Long> {
     @Query("SELECT p FROM Participation  p WHERE  p.status = 'VALIDATED'")
@@ -44,4 +45,8 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     Page<Participation> findAllByStatus(Status status, Pageable pageable);
 
     Long countBySatisfaction(int satisfaction);
+
+    @Query("select count (p) from Participation p where p.participantAddress.postCode between :min and :max")
+    int countParticipationByProvince(int min, int max);
+
 }

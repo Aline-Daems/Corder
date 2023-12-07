@@ -14,7 +14,7 @@ public record ParticipationForm(
         Status status,
         String street,
         String city,
-        String postCode,
+        int postCode,
         int satisfaction,
         String satisfactionComment,
         boolean acceptNewsletter

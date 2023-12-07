@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.parser.Entity;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/participation")
@@ -294,8 +295,14 @@ public class ParticipationController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/CountNote")
+    @GetMapping("/countNote")
     public ResponseEntity<Long> countNote(@RequestParam("note") int note) {
         return ResponseEntity.ok(participationService.countBySatisfaction(note));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countByProvince")
+    public ResponseEntity<Map<String, Integer>> countByProvince() {
+        return ResponseEntity.ok(participationService.countParticipationByProvince());
     }
 }

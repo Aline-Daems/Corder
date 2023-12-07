@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ParticipationService {
     Participation create(ParticipationForm participation);
@@ -48,4 +49,5 @@ public interface ParticipationService {
 
     Page<Participation> findAllByStatus(Status status, Pageable pageable);
     Long countBySatisfaction(int satisfaction);
+    Map<String, Integer> countParticipationByProvince();
 }
