@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.parser.Entity;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -304,5 +305,17 @@ public class ParticipationController {
     @GetMapping("/countByProvince")
     public ResponseEntity<Map<String, Integer>> countByProvince() {
         return ResponseEntity.ok(participationService.countParticipationByProvince());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countParticipationsPreceeding7Days")
+    public ResponseEntity<Map<String, Integer>> countParticipationsFor7Days(@RequestParam("date")LocalDate date) {
+        return ResponseEntity.ok(participationService.countParticipationsFor7Days(date));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countParticipationsFor5LastMonths")
+    public ResponseEntity<Map<String, Integer>> countParticipationsFor5LastMonths() {
+        return ResponseEntity.ok(participationService.countParticipationsFor5LastMonths());
     }
 }

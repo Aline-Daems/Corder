@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +50,6 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     @Query("select count (p) from Participation p where p.participantAddress.postCode between :min and :max")
     int countParticipationByProvince(int min, int max);
 
+    @Query("select count (p) from Participation p where p.participationDate between :start and :end")
+    int countParticipationsBetweenDates(LocalDate start, LocalDate end);
 }

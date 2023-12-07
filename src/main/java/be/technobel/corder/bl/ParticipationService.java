@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -50,4 +51,6 @@ public interface ParticipationService {
     Page<Participation> findAllByStatus(Status status, Pageable pageable);
     Long countBySatisfaction(int satisfaction);
     Map<String, Integer> countParticipationByProvince();
+    Map<String, Integer> countParticipationsFor7Days(LocalDate start);
+    Map<String, Integer> countParticipationsFor5LastMonths();
 }
