@@ -278,4 +278,13 @@ public class ParticipationServiceImpl implements ParticipationService {
                 "fonction", //L'appareil ne fonctionnait pas
                 "claire");  //Informations pas claires
     }
+
+    @Override
+    public List<String> findAllOthersSatisfactionComments() {
+        return participationRepository.findAllParticipationsBySatisfactionCommentsNotContaining(
+                "long",     //C'était trop long
+                "court",    //C'était trop court
+                "fonction", //L'appareil ne fonctionnait pas
+                "claire");  //Informations pas claires
+    }
 }

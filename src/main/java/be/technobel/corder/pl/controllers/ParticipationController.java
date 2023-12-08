@@ -283,4 +283,9 @@ public class ParticipationController {
         return ResponseEntity.ok(participationService.countByOthersSatisfactionComments());
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/allOthersSatisfactionComment")
+    public ResponseEntity<List<String>> allByOthersSatisfactionComment() {
+        return ResponseEntity.ok(participationService.findAllOthersSatisfactionComments());
+    }
 }

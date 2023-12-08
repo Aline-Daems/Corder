@@ -56,4 +56,5 @@ public interface ParticipationService {
     Map<String, Integer> countParticipationsFor5LastMonths();
     int countBySatisfactionComment(String satisfactionComment);
     int countByOthersSatisfactionComments();
+    List<String> findAllOthersSatisfactionComments();
 }

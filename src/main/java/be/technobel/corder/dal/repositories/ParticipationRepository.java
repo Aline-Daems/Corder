@@ -60,4 +60,10 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
                                                                @Param("comment2") String comment2,
                                                                @Param("comment3") String comment3,
                                                                @Param("comment4") String comment4);
+
+    @Query("SELECT p.satisfactionComment FROM Participation p WHERE p.satisfactionComment NOT LIKE %:comment1% AND p.satisfactionComment NOT LIKE %:comment2% AND p.satisfactionComment NOT LIKE %:comment3% AND p.satisfactionComment NOT LIKE %:comment4%")
+    List<String> findAllParticipationsBySatisfactionCommentsNotContaining(@Param("comment1") String comment1,
+                                                                        @Param("comment2") String comment2,
+                                                                        @Param("comment3") String comment3,
+                                                                        @Param("comment4") String comment4);
 }
