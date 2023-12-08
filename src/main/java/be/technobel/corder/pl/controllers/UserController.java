@@ -41,10 +41,10 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/changePassword/{id}")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable Long id) throws Exception {
+    @PostMapping("/changePassword/{login}")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable String login) throws Exception {
 
-        User user = userService.findById(id);
+        User user = userService.findByLogin(login);
 
         if (user != null) {
             UserDTO dto = new UserDTO();
@@ -52,7 +52,7 @@ public class UserController {
 
             dto.setPassword(form.getOldPassword());
 
-            int check = userService.changeUserPassword(dto, form.getNewPassword(), id);
+            int check = userService.changeUserPassword(dto, form.getNewPassword(), login);
 
             if (check == 1) {
 

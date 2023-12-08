@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteById(Long id);
     @Transactional
     @Modifying
-    @Query("UPDATE User SET password = :password")
-    void changeUserPassword( @Param("password") String password);
+    @Query("UPDATE User SET password = :password where login = :login")
+    void changeUserPassword( @Param("password") String password, String login);
 }

@@ -127,21 +127,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int changeUserPassword(UserDTO dto, String newPassword, Long id) {
+    public int changeUserPassword(UserDTO dto, String newPassword, String login) {
 
 
         String userPassword = dto.getPassword();
 
-        boolean checkPassword =  userCheckService.isTruePassword(id, userPassword);
+        boolean checkPassword =  userCheckService.isTruePassword(userRepository.findByLogin(login).orElseThrow(EntityNotFoundException::new).getId(), userPassword);
 
         if(checkPassword){
 
-            userRepository.changeUserPassword(passwordEncoder.encode(newPassword) );
+            userRepository.changeUserPassword(passwordEncoder.encode(newPassword), login);
 
             return 1;
         }
 
         return 0;
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login).orElseThrow(EntityNotFoundException::new);
     }
 
 
