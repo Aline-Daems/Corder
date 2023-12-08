@@ -6,6 +6,7 @@ import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Status;
 import be.technobel.corder.dal.repositories.ParticipationRepository;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
+import be.technobel.corder.pl.config.exceptions.PhotoException;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,14 +36,25 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     private void isUniqueParticipant(Participation participation) {
         //TODO: vérifier le mail
-        String address = formatAddress(participation);
+
+        String email = formatEmail(participation);
+
+        List<String> emails = findAll().stream()
+                .map(this::formatEmail)
+                .toList();
+
+        if (emails.contains(email)) {
+            throw new DuplicateParticipationException("Ce participant a déjà joué avec cet email !");
+        }
+
+        String address = participation.getParticipantAddress().toString();
 
         List<String> addresses = findAll().stream()
                 .map(this::formatAddress)
                 .toList();
 
         if (addresses.contains(address)) {
-            throw new DuplicateParticipationException("Ce participant a déjà joué !");
+            throw new DuplicateParticipationException("Ce foyer a déjà une participation !");
         }
     }
 
@@ -50,15 +62,14 @@ public class ParticipationServiceImpl implements ParticipationService {
         Address Address = participation.getParticipantAddress();
         return (Address.getStreet() + Address.getCity() + Address.getPostCode()).trim().toLowerCase();
     }
+
+    private String formatEmail(Participation participation) {
+        return (participation.getParticipantEmail()).trim().toLowerCase();
+    }
     @Override
     public Participation create(ParticipationForm participation) {
-      try{
           isUniqueParticipant(participation.toEntity());
           return participationRepository.save(participation.toEntity());
-
-      }catch (DuplicateParticipationException e){
-          throw new DuplicateParticipationException("Ce participant a déjà joué !");
-      }
     }
 
     @Override
@@ -133,10 +144,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setStatus(Status.VALIDATED);
         entity.setValidatedDate(LocalDateTime.now());
         participationRepository.save(entity);
-        try {
-            emailService.sendMail(participationRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        }catch (Exception e) {
-        }
+        emailService.sendMail(participationRepository.findById(id).orElseThrow(EntityNotFoundException::new));
         return true;
     }
 
@@ -214,7 +222,7 @@ public class ParticipationServiceImpl implements ParticipationService {
             entity.setPictureType(photo.getContentType());
             return participationRepository.save(entity);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to add photo to participation with id: " + id, e);
+            throw new PhotoException("Failed to add photo to participation with id: " + id + e.getMessage());
         }
     }
 

@@ -36,8 +36,8 @@ public class UserController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
-    public AuthDTO login(@RequestBody LoginForm form) {
-        return userService.login(form);
+    public ResponseEntity<AuthDTO> login(@RequestBody LoginForm form) {
+        return ResponseEntity.ok(userService.login(form));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

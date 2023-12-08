@@ -74,12 +74,8 @@ public class ParticipationController {
 
     @PostMapping("/createSatisfaction")
     public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
-        try {
             Participation participation = participationService.updateSatisfaction(form);
             return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
-        }catch (DuplicateParticipationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
     }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PutMapping("/update/{id}")
