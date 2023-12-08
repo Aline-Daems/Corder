@@ -26,7 +26,6 @@ import java.util.*;
 public class ParticipationServiceImpl implements ParticipationService {
 
     private final ParticipationRepository participationRepository;
-    //TODO: remettre en place les mails ??
     private final EmailServiceImpl emailService;
 
     public ParticipationServiceImpl(ParticipationRepository participationRepository, EmailServiceImpl emailService) {
@@ -134,6 +133,10 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setStatus(Status.VALIDATED);
         entity.setValidatedDate(LocalDateTime.now());
         participationRepository.save(entity);
+        try {
+            emailService.sendMail(participationRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        }catch (Exception e) {
+        }
         return true;
     }
 

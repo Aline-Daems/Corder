@@ -48,10 +48,10 @@ public class ParticipationController {
     }
 
     @PostMapping("/addPhoto")
-    public ResponseEntity<ParticipationDTO> addPhoto(@RequestParam("id") Long id, @RequestParam("file") MultipartFile photo) {
+    public ResponseEntity<ParticipationNoBlobDTO> addPhoto(@RequestParam("id") Long id, @RequestParam("file") MultipartFile photo) {
         try {
             Participation participation = participationService.addPhoto(photo, id);
-            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+            return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
@@ -76,35 +76,26 @@ public class ParticipationController {
     public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
         try {
             Participation participation = participationService.updateSatisfaction(form);
-            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+            return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
         }catch (DuplicateParticipationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParticipationDTO> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
+    public ResponseEntity<ParticipationNoBlobDTO> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
       Participation participation =  participationService.update(id, participationForm);
-      return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+      return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
     }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/findById/{id}")
-    public ResponseEntity<ParticipationDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<ParticipationNoBlobDTO> findById(@PathVariable Long id) {
         Participation participation = participationService.findById(id);
         if (participation != null) {
-            return ResponseEntity.ok(ParticipationDTO.fromEntity(participation));
+            return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/all")
-    public ResponseEntity<List<ParticipationDTO>> findAll() {
-        List<Participation> participations = participationService.findAll();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
-                .toList();
-        return ResponseEntity.ok(dtos);
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
@@ -135,29 +126,11 @@ public class ParticipationController {
         return ResponseEntity.ok(dtos);
     }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/allValidated")
-    public ResponseEntity<List<ParticipationDTO>> findValidated() {
-        List<Participation> participations = participationService.findValidated();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
-                .toList();
-        return ResponseEntity.ok(dtos);
-    }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allValidatedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findValidatedNoBlob() {
         List<Participation> participations = participationService.findValidated();
         List<ParticipationNoBlobDTO> dtos = participations.stream()
                 .map(ParticipationNoBlobDTO::fromEntity)
-                .toList();
-        return ResponseEntity.ok(dtos);
-    }
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/allPending")
-    public ResponseEntity<List<ParticipationDTO>> findNonValidated() {
-        List<Participation> participations = participationService.findPending();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
@@ -170,32 +143,12 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
-
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/allShipped")
-    public ResponseEntity<List<ParticipationDTO>> findShipped() {
-        List<Participation> participations = participationService.findShipped();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
-                .toList();
-        return ResponseEntity.ok(dtos);
-    }
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allShippedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findShippedNoBlob() {
         List<Participation> participations = participationService.findShipped();
         List<ParticipationNoBlobDTO> dtos = participations.stream()
                 .map(ParticipationNoBlobDTO::fromEntity)
-                .toList();
-        return ResponseEntity.ok(dtos);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
-    @GetMapping("/allDenied")
-    public ResponseEntity<List<ParticipationDTO>> findDenied() {
-        List<Participation> participations = participationService.findDenied();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
@@ -268,19 +221,19 @@ public class ParticipationController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/getLasts3Validated")
-    public ResponseEntity<List<ParticipationDTO>> getLasts3Validated() {
+    public ResponseEntity<List<ParticipationNoBlobDTO>> getLasts3Validated() {
         List<Participation> participations = participationService.getLasts3Validated();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getLasts3NonValidated")
-    public ResponseEntity<List<ParticipationDTO>> getLasts3NonValidated() {
+    public ResponseEntity<List<ParticipationNoBlobDTO>> getLasts3NonValidated() {
         List<Participation> participations = participationService.getLasts3NonValidated();
-        List<ParticipationDTO> dtos = participations.stream()
-                .map(ParticipationDTO::fromEntity)
+        List<ParticipationNoBlobDTO> dtos = participations.stream()
+                .map(ParticipationNoBlobDTO::fromEntity)
                 .toList();
         return ResponseEntity.ok(dtos);
     }
