@@ -33,6 +33,9 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'fongicide'")
     Long findbyProductFong();
 
+    @Query("select count (p) from Participation p where p.productType not in ('insecticide', 'herbicide', 'fongicide')")
+    Long countAllOtherProductType();
+
     @Query("select distinct p.productType from Participation p where p.productType not in ('insecticide', 'herbicide', 'fongicide')")
     List<String> findAllOtherProductType();
 

@@ -197,6 +197,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    public Long countAllOtherProductType() {
+        return participationRepository.countAllOtherProductType();
+    }
+
+    @Override
     public List<String> findAllOtherProductType() {
         return participationRepository.findAllOtherProductType();
     }

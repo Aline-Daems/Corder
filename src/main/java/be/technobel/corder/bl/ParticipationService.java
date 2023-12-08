@@ -42,6 +42,8 @@ public interface ParticipationService {
 
     Long countParticipation();
 
+    Long countAllOtherProductType();
+
     List<String> findAllOtherProductType();
 
     List<Participation> getLasts3Validated();

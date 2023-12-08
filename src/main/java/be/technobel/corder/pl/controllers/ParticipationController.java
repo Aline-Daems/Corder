@@ -203,6 +203,13 @@ public class ParticipationController {
         return  ResponseEntity.ok(participationService.countFongicide());
     }
 
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/countAllOtherProductType")
+    public ResponseEntity<Long> countAllOtherProductType (){
+        return  ResponseEntity.ok(participationService.countAllOtherProductType());
+    }
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/findAllOtherProductType")
     public ResponseEntity<List<String>> findAllOtherProductType() {
