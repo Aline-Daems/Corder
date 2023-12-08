@@ -7,6 +7,7 @@ import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -53,4 +54,6 @@ public interface ParticipationService {
     Map<String, Integer> countParticipationByProvince();
     Map<String, Integer> countParticipationsFor7Days(LocalDate start);
     Map<String, Integer> countParticipationsFor5LastMonths();
+    int countBySatisfactionComment(String satisfactionComment);
+    int countByOthersSatisfactionComments();
 }

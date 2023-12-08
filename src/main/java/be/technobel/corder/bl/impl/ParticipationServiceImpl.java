@@ -264,4 +264,18 @@ public class ParticipationServiceImpl implements ParticipationService {
         }
         return map;
     }
+
+    @Override
+    public int countBySatisfactionComment(String satisfactionComment) {
+        return participationRepository.countParticipationsBySatisfactionCommentContainingIgnoreCase(satisfactionComment);
+    }
+
+    @Override
+    public int countByOthersSatisfactionComments() {
+        return participationRepository.countParticipationsBySatisfactionCommentsNotContaining(
+                "long",     //C'était trop long
+                "court",    //C'était trop court
+                "fonction", //L'appareil ne fonctionnait pas
+                "claire");  //Informations pas claires
+    }
 }

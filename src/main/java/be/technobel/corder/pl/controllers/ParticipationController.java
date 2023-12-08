@@ -271,4 +271,16 @@ public class ParticipationController {
     public ResponseEntity<Map<String, Integer>> countParticipationsFor5LastMonths() {
         return ResponseEntity.ok(participationService.countParticipationsFor5LastMonths());
     }
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/countBySatisfactionComment")
+    public ResponseEntity<Integer> countBySatisfactionComment(@RequestParam("satisfactionComment") String satisfactionComment) {
+        return ResponseEntity.ok(participationService.countBySatisfactionComment(satisfactionComment));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
+    @GetMapping("/countByOthersSatisfactionComment")
+    public ResponseEntity<Integer> countByOthersSatisfactionComment() {
+        return ResponseEntity.ok(participationService.countByOthersSatisfactionComments());
+    }
+
 }
