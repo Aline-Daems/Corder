@@ -1,6 +1,7 @@
 package be.technobel.corder.bl;
 
 import be.technobel.corder.dal.models.Participation;
+import be.technobel.corder.dal.models.enums.Status;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface ParticipationService {
     Participation create(ParticipationForm participation);
@@ -40,8 +43,14 @@ public interface ParticipationService {
 
     List<String> findAllOtherProductType();
 
-    List<Participation> getLastsValidated(int nbr);
-    List<Participation> getLastsNonValidated(int nbr);
+    List<Participation> getLasts3Validated();
+    List<Participation> getLasts3NonValidated();
 
     Participation addPhoto(MultipartFile photo, Long id);
+
+    Page<Participation> findAllByStatus(Status status, Pageable pageable);
+    Long countBySatisfaction(int satisfaction);
+    Map<String, Integer> countParticipationByProvince();
+    Map<String, Integer> countParticipationsFor7Days(LocalDate start);
+    Map<String, Integer> countParticipationsFor5LastMonths();
 }

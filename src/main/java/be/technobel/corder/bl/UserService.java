@@ -17,5 +17,7 @@ public interface UserService {
     User delete(Long id);
     AuthDTO login (LoginForm form);
 
-    int changeUserPassword(UserDTO dto, String newPassword, Long id);
+    int changeUserPassword(UserDTO dto, String newPassword, String login);
+
+    User findByLogin(String login);
 }

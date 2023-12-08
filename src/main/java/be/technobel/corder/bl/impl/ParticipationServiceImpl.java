@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -190,14 +192,14 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     @Transactional
-    public List<Participation> getLastsValidated(int nbr) {
-        return participationRepository.getLastValidated(nbr);
+    public List<Participation> getLasts3Validated() {
+        return participationRepository.getLast3Validated();
     }
 
     @Override
     @Transactional
-    public List<Participation> getLastsNonValidated(int nbr) {
-        return participationRepository.getLastNonValidated(nbr);
+    public List<Participation> getLasts3NonValidated() {
+        return participationRepository.getLast3NonValidated();
     }
 
     @Override
@@ -211,5 +213,52 @@ public class ParticipationServiceImpl implements ParticipationService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to add photo to participation with id: " + id, e);
         }
+    }
+
+    @Override
+    public Page<Participation> findAllByStatus(Status status, Pageable pageable) {
+        return participationRepository.findAllByStatus(status, pageable);
+    }
+
+    @Override
+    public Long countBySatisfaction(int satisfaction) {
+        return participationRepository.countBySatisfaction(satisfaction);
+    }
+
+    @Override
+    public Map<String, Integer> countParticipationByProvince() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Brabant wallon", participationRepository.countParticipationByProvince(1300, 1499));
+        map.put("Liège", participationRepository.countParticipationByProvince(4000, 4999));
+        map.put("Namur", participationRepository.countParticipationByProvince(5000, 5680));
+        map.put("Hainaut", participationRepository.countParticipationByProvince(6000, 6599) + participationRepository.countParticipationByProvince(7000, 7999));
+        map.put("Luxembourg", participationRepository.countParticipationByProvince(6600, 6999));
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> countParticipationsFor7Days(LocalDate start) {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (int i = 0; i <= 6; i++) {
+            LocalDate currentDate = start.minusDays(i);
+            Integer count = participationRepository.countParticipationsBetweenDates(currentDate, currentDate);
+            map.put(currentDate.getDayOfWeek().toString(), count);
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> countParticipationsFor5LastMonths() {
+        LocalDate start = LocalDate.now();
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (int i = 0; i < 5; i++) {
+            LocalDate currentDate = start.minusMonths(i);
+            YearMonth currentMonth = YearMonth.from(currentDate);
+            Integer count = participationRepository.countParticipationsBetweenDates(
+                    currentDate.withDayOfMonth(1),
+                    currentDate.withDayOfMonth(currentDate.lengthOfMonth()));
+            map.put(currentMonth.getMonth().toString(), count);
+        }
+        return map;
     }
 }

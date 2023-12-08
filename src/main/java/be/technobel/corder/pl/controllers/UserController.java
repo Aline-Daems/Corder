@@ -22,29 +22,29 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-  //  @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserForm form) {
         try {
             userService.create(form);
-            return  ResponseEntity.ok("User created");
+            return ResponseEntity.ok("User created");
         } catch (DuplicateParticipationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }
 
-    //@PreAuthorize("isAnonymous()")
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
     public AuthDTO login(@RequestBody LoginForm form) {
         return userService.login(form);
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/changePassword/{id}")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable Long id) throws Exception {
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/changePassword/{login}")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable String login) throws Exception {
 
-        User user = userService.findById(id);
+        User user = userService.findByLogin(login);
 
         if (user != null) {
             UserDTO dto = new UserDTO();
@@ -52,7 +52,7 @@ public class UserController {
 
             dto.setPassword(form.getOldPassword());
 
-            int check = userService.changeUserPassword(dto, form.getNewPassword(), id);
+            int check = userService.changeUserPassword(dto, form.getNewPassword(), login);
 
             if (check == 1) {
 
