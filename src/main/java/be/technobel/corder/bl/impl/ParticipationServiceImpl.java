@@ -38,7 +38,6 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     private void isUniqueParticipant(Participation participation) {
-        //TODO: vérifier le mail
 
         String email = formatEmail(participation);
 
@@ -98,7 +97,6 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public Participation update(Long id, ParticipationForm participation) {
-        //TODO: tout vérifier avant de modifier si on a le temps
         Participation entity = findById(id);
         entity.setParticipantFirstName(participation.firstName());
         entity.setParticipantLastName(participation.lastName());
@@ -131,14 +129,14 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional
     public List<Participation> findValidated() {
-        return participationRepository.findByValidated();
+        return participationRepository.findByStatus("VALIDATED");
     }
 
 
     @Override
     @Transactional
     public List<Participation> findShipped() {
-        return participationRepository.findByShipped();
+        return participationRepository.findByStatus("SHIPPED");
     }
 
     @Override
@@ -171,28 +169,28 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional
     public List<Participation> findPending() {
-        return participationRepository.findByPending();
+        return participationRepository.findByStatus("PENDING");
     }
 
     @Override
     @Transactional
     public List<Participation> findDenied() {
-        return participationRepository.findByDenied();
+        return participationRepository.findByStatus("DENIED");
     }
 
     @Override
     public Long countInsecticide() {
-        return participationRepository.findbyProductInsec();
+        return participationRepository.countByProduct("insecticide");
     }
 
     @Override
     public Long countHerbicide() {
-        return participationRepository.findbyProductHerbi();
+        return participationRepository.countByProduct("herbicide");
     }
 
     @Override
     public Long countFongicide() {
-        return participationRepository.findbyProductFong();
+        return participationRepository.countByProduct("fongicide");
     }
 
     @Override

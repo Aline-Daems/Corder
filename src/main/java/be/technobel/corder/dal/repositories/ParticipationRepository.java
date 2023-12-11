@@ -12,33 +12,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ParticipationRepository extends JpaRepository<Participation, Long> {
-    @Query("SELECT p FROM Participation  p WHERE  p.status = 'VALIDATED'")
-    List<Participation> findByValidated();
-
-    @Query("SELECT p FROM Participation  p WHERE p.status = 'SHIPPED'")
-    List<Participation> findByShipped();
-
-    @Query("SELECT p FROM Participation  p WHERE p.status = 'PENDING'")
-    List<Participation> findByPending();
-
-    @Query("SELECT p FROM Participation  p WHERE p.status = 'DENIED'")
-    List<Participation> findByDenied();
-
-    //TODO: arranger un peu ça et peut etre en haut aussi
-    @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'insecticide'")
-    Long findbyProductInsec();
-
-    @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'herbicide'")
-    Long findbyProductHerbi();
-
-    @Query("SELECT COUNT(p) FROM Participation  p WHERE p.productType = 'fongicide'")
-    Long findbyProductFong();
-
-    @Query("select count (p) from Participation p where p.productType not in ('insecticide', 'herbicide', 'fongicide')")
-    Long countAllOtherProductType();
+    @Query("SELECT p FROM Participation p WHERE p.status = :status")
+    List<Participation> findByStatus(@Param("status") String status);
+    @Query("SELECT COUNT(p) FROM Participation p WHERE p.productType = :productType")
+    Long countByProduct(String productType);
 
     @Query("select distinct p.productType from Participation p where p.productType not in ('insecticide', 'herbicide', 'fongicide')")
     List<String> findAllOtherProductType();
+
+    @Query("select count (p) from Participation p where p.productType not in ('insecticide', 'herbicide', 'fongicide')")
+    Long countAllOtherProductType();
 
     @Query("SELECT COUNT (p) from  Participation p ")
     Long findNbrParticipation();
