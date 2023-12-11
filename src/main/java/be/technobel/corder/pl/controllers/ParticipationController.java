@@ -11,6 +11,7 @@ import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -35,7 +36,7 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody ParticipationForm form) {
+    public ResponseEntity<?> create(@RequestBody @Valid ParticipationForm form) {
         try {
             Participation participation = participationService.create(form);
             return ResponseEntity.ok(ParticipationIdDTO.fromEntity(participation));
@@ -70,14 +71,14 @@ public class ParticipationController {
 
 
     @PostMapping("/createSatisfaction")
-    public ResponseEntity<?> createSatisfaction(@RequestBody SatisfactionForm form) {
+    public ResponseEntity<?> createSatisfaction(@RequestBody @Valid SatisfactionForm form) {
         Participation participation = participationService.updateSatisfaction(form);
         return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PutMapping("/update/{id}")
-    public ResponseEntity<ParticipationNoBlobDTO> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
+    public ResponseEntity<ParticipationNoBlobDTO> update(@PathVariable Long id, @RequestBody @Valid ParticipationForm participationForm) {
         Participation participation = participationService.update(id, participationForm);
         return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
     }

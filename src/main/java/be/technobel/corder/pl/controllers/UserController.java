@@ -8,6 +8,7 @@ import be.technobel.corder.pl.models.dtos.UserDTO;
 import be.technobel.corder.pl.models.forms.ChangePasswordForm;
 import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class UserController {
 
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody UserForm form) {
+    public ResponseEntity<?> create(@RequestBody @Valid UserForm form) {
         try {
             userService.create(form);
             return ResponseEntity.ok("User created");
@@ -36,13 +37,13 @@ public class UserController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/login")
-    public ResponseEntity<AuthDTO> login(@RequestBody LoginForm form) {
+    public ResponseEntity<AuthDTO> login(@RequestBody @Valid LoginForm form) {
         return ResponseEntity.ok(userService.login(form));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/changePassword/{login}")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordForm form, @PathVariable String login) throws Exception {
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordForm form, @PathVariable String login) {
 
         User user = userService.findByLogin(login);
 
