@@ -10,7 +10,7 @@
     </parent>
     <groupId>be.technobel</groupId>
     <artifactId>Corder</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1</version>
     <name>Corder</name>
     <description>Corder</description>
     <properties>
