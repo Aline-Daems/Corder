@@ -2,8 +2,8 @@ package be.technobel.corder.pl.models.forms;
 
 public class LoginForm {
 
-    private String login;
-    private String password;
+    private final String login;
+    private final String password;
 
     public LoginForm(String login, String password) {
         this.login = login;

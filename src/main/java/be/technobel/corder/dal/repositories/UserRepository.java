@@ -13,11 +13,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u from User u WHERE u.login = :login")
     Optional<User> findByLogin(String login);
+
     Optional<User> findById(Long id);
 
     void deleteById(Long id);
+
     @Transactional
     @Modifying
     @Query("UPDATE User SET password = :password where login = :login")
-    void changeUserPassword( @Param("password") String password, String login);
+    void changeUserPassword(@Param("password") String password, String login);
 }

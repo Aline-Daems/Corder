@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table (
-        uniqueConstraints =  @UniqueConstraint(name = "uniquePartcipant", columnNames = {
+@Table(
+        uniqueConstraints = @UniqueConstraint(name = "uniquePartcipant", columnNames = {
                 "participantFirstname",
                 "participantLastName",
                 "participantEmail"})
@@ -54,6 +54,10 @@ public class Participation {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public LocalDate getParticipationDate() {
         return participationDate;
     }
@@ -93,8 +97,6 @@ public class Participation {
     public void setParticipantAddress(Address participantAddress) {
         this.participantAddress = participantAddress;
     }
-
-
 
     public String getPictureName() {
         return pictureName;
@@ -158,10 +160,6 @@ public class Participation {
 
     public void setValidatedDate(LocalDateTime validatedDate) {
         this.validatedDate = validatedDate;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public boolean isAcceptNewsletter() {

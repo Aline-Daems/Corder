@@ -2,7 +2,6 @@ package be.technobel.corder.dal.repositories;
 
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Status;
-import jakarta.mail.Part;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,15 +10,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-public interface ParticipationRepository extends JpaRepository<Participation,Long> {
+public interface ParticipationRepository extends JpaRepository<Participation, Long> {
     @Query("SELECT p FROM Participation  p WHERE  p.status = 'VALIDATED'")
     List<Participation> findByValidated();
+
     @Query("SELECT p FROM Participation  p WHERE p.status = 'SHIPPED'")
     List<Participation> findByShipped();
+
     @Query("SELECT p FROM Participation  p WHERE p.status = 'PENDING'")
     List<Participation> findByPending();
+
     @Query("SELECT p FROM Participation  p WHERE p.status = 'DENIED'")
     List<Participation> findByDenied();
 
@@ -41,8 +42,10 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     @Query("SELECT COUNT (p) from  Participation p ")
     Long findNbrParticipation();
+
     @Query("select p from Participation p where p.status = 'VALIDATED' order by p.validatedDate desc limit 3")
     List<Participation> getLast3Validated();
+
     @Query("select p from Participation p where p.status = 'PENDING' order by p.participationDate desc limit 3")
     List<Participation> getLast3NonValidated();
 
@@ -66,7 +69,7 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
 
     @Query("SELECT p.satisfactionComment FROM Participation p WHERE p.satisfactionComment NOT LIKE %:comment1% AND p.satisfactionComment NOT LIKE %:comment2% AND p.satisfactionComment NOT LIKE %:comment3% AND p.satisfactionComment NOT LIKE %:comment4%")
     List<String> findAllParticipationsBySatisfactionCommentsNotContaining(@Param("comment1") String comment1,
-                                                                        @Param("comment2") String comment2,
-                                                                        @Param("comment3") String comment3,
-                                                                        @Param("comment4") String comment4);
+                                                                          @Param("comment2") String comment2,
+                                                                          @Param("comment3") String comment3,
+                                                                          @Param("comment4") String comment4);
 }

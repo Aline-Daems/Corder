@@ -25,6 +25,9 @@ public class UserDTO {
         this.email = email;
     }
 
+    public static UserDTO fromEntity(User user) {
+        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getLogin(), user.getPassword(), user.getRole(), user.getEmail());
+    }
 
     public Long getId() {
         return id;
@@ -81,11 +84,6 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public static UserDTO fromEntity(User user) {
-        return new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getLogin(), user.getPassword(), user.getRole(), user.getEmail());
-    }
-
 
 
 }

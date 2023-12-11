@@ -1,7 +1,6 @@
 package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.UserService;
-
 import be.technobel.corder.dal.models.User;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
 import be.technobel.corder.pl.models.dtos.AuthDTO;
@@ -22,6 +21,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody UserForm form) {

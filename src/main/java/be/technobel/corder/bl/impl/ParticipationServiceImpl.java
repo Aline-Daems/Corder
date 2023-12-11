@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ParticipationServiceImpl implements ParticipationService {
@@ -66,10 +69,11 @@ public class ParticipationServiceImpl implements ParticipationService {
     private String formatEmail(Participation participation) {
         return (participation.getParticipantEmail()).trim().toLowerCase();
     }
+
     @Override
     public Participation create(ParticipationForm participation) {
-          isUniqueParticipant(participation.toEntity());
-          return participationRepository.save(participation.toEntity());
+        isUniqueParticipant(participation.toEntity());
+        return participationRepository.save(participation.toEntity());
     }
 
     @Override
@@ -108,7 +112,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         entity.setStatus(participation.status());
         entity.setParticipantAddress(address);
 
-       return participationRepository.save(entity);
+        return participationRepository.save(entity);
     }
 
     @Override
@@ -129,7 +133,6 @@ public class ParticipationServiceImpl implements ParticipationService {
     public List<Participation> findValidated() {
         return participationRepository.findByValidated();
     }
-
 
 
     @Override
@@ -173,12 +176,13 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     @Transactional
-    public List<Participation> findDenied(){
-        return  participationRepository.findByDenied();
+    public List<Participation> findDenied() {
+        return participationRepository.findByDenied();
     }
+
     @Override
     public Long countInsecticide() {
-       return participationRepository.findbyProductInsec();
+        return participationRepository.findbyProductInsec();
     }
 
     @Override

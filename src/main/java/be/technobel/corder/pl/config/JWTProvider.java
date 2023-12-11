@@ -27,37 +27,37 @@ public class JWTProvider {
     private static final String TOKEN_PREFIX = "Bearer ";
     private final UserDetailsService userDetailsService;
 
-    public JWTProvider (UserDetailsServiceImpl userDetailsService) {
+    public JWTProvider(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     public String generateToken(String firstname, Role role) {
-    try {
-       String token = TOKEN_PREFIX + JWT.create()
-               .withSubject(firstname)
-               .withClaim("role", role.name())
-               .withExpiresAt(Instant.now().plusMillis(EXPIRES_AT))
-               .sign(Algorithm.HMAC512(JWT_SECRET));
+        try {
+            String token = TOKEN_PREFIX + JWT.create()
+                    .withSubject(firstname)
+                    .withClaim("role", role.name())
+                    .withExpiresAt(Instant.now().plusMillis(EXPIRES_AT))
+                    .sign(Algorithm.HMAC512(JWT_SECRET));
 
-       System.out.println("Token généré avec succès: " + token);
-       return token;
-   }catch ( Exception e) {
-        e.printStackTrace();
-        return null;
-    }
+            System.out.println("Token généré avec succès: " + token);
+            return token;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public String extractToken (HttpServletRequest request){
+    public String extractToken(HttpServletRequest request) {
 
         String header = request.getHeader(AUTH_HEADER);
-        if(header == null || !header.startsWith(TOKEN_PREFIX)){
-            return  null;
+        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+            return null;
         }
         return header.replaceFirst(TOKEN_PREFIX, "");
 
     }
 
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         try {
             DecodedJWT jwt = JWT.require(Algorithm.HMAC512(JWT_SECRET))
                     .acceptExpiresAt(EXPIRES_AT)
@@ -70,15 +70,15 @@ public class JWTProvider {
             User user = (User) userDetailsService.loadUserByUsername(username);
             Claim tokenrole = jwt.getClaim("role");
 
-            Role  tokenRoles = Role.valueOf(tokenrole.asString());
-            return  user.getRole().equals(tokenRoles);
+            Role tokenRoles = Role.valueOf(tokenrole.asString());
+            return user.getRole().equals(tokenRoles);
 
-        }catch (JWTVerificationException | UsernameNotFoundException ex) {
+        } catch (JWTVerificationException | UsernameNotFoundException ex) {
             return false;
         }
     }
 
-    public Authentication createAuthentification(String token){
+    public Authentication createAuthentification(String token) {
         DecodedJWT jwt = JWT.decode(token);
         String username = jwt.getSubject();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);

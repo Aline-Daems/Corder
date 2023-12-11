@@ -1,11 +1,10 @@
 package be.technobel.corder.dal.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import jakarta.persistence.*;
 
 @Entity
-@Table (
-        uniqueConstraints =  @UniqueConstraint(name = "uniqueAdress", columnNames = {
+@Table(
+        uniqueConstraints = @UniqueConstraint(name = "uniqueAdress", columnNames = {
                 "street",
                 "city",
                 "postcode"})

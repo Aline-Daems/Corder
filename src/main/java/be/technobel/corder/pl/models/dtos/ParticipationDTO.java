@@ -4,7 +4,6 @@ import be.technobel.corder.dal.models.Address;
 import be.technobel.corder.dal.models.Participation;
 import be.technobel.corder.dal.models.enums.Status;
 
-import java.sql.Blob;
 import java.time.LocalDate;
 
 public record ParticipationDTO(

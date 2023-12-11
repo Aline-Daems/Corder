@@ -2,11 +2,9 @@ package be.technobel.corder.pl.controllers;
 
 import be.technobel.corder.bl.ParticipationService;
 import be.technobel.corder.dal.models.Participation;
-
 import be.technobel.corder.dal.models.enums.SortParticipation;
 import be.technobel.corder.dal.models.enums.Status;
 import be.technobel.corder.pl.config.exceptions.DuplicateParticipationException;
-import be.technobel.corder.pl.models.dtos.ParticipationDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationIdDTO;
 import be.technobel.corder.pl.models.dtos.ParticipationNoBlobDTO;
 import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
@@ -21,7 +19,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +35,13 @@ public class ParticipationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create (@RequestBody ParticipationForm form) {
-      try {
-          Participation participation = participationService.create(form);
-          return ResponseEntity.ok(ParticipationIdDTO.fromEntity(participation));
-      }catch (DuplicateParticipationException e) {
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-      }
+    public ResponseEntity<?> create(@RequestBody ParticipationForm form) {
+        try {
+            Participation participation = participationService.create(form);
+            return ResponseEntity.ok(ParticipationIdDTO.fromEntity(participation));
+        } catch (DuplicateParticipationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("/addPhoto")
@@ -73,16 +70,18 @@ public class ParticipationController {
 
 
     @PostMapping("/createSatisfaction")
-    public ResponseEntity<?> createSatisfaction (@RequestBody SatisfactionForm form) {
-            Participation participation = participationService.updateSatisfaction(form);
-            return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
+    public ResponseEntity<?> createSatisfaction(@RequestBody SatisfactionForm form) {
+        Participation participation = participationService.updateSatisfaction(form);
+        return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ParticipationNoBlobDTO> update(@PathVariable Long id, @RequestBody ParticipationForm participationForm) {
-      Participation participation =  participationService.update(id, participationForm);
-      return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
+        Participation participation = participationService.update(id, participationForm);
+        return ResponseEntity.ok(ParticipationNoBlobDTO.fromEntity(participation));
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/findById/{id}")
     public ResponseEntity<ParticipationNoBlobDTO> findById(@PathVariable Long id) {
@@ -104,11 +103,11 @@ public class ParticipationController {
     @GetMapping("/PageByStatus")
     public ResponseEntity<Page<ParticipationNoBlobDTO>> findAllPageByStatus(@RequestParam("status") String status, @RequestParam("sort") String sort, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "20") int size) {
         if (SortParticipation.valueOf(sort.toUpperCase()).equals(SortParticipation.DATEDESC)) {
-            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()) ,PageRequest.of(page, size, Sort.by("participationDate").descending())).map(ParticipationNoBlobDTO::fromEntity));
+            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()), PageRequest.of(page, size, Sort.by("participationDate").descending())).map(ParticipationNoBlobDTO::fromEntity));
         } else if (SortParticipation.valueOf(sort.toUpperCase()).equals(SortParticipation.DATEASC)) {
-            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()) ,PageRequest.of(page, size, Sort.by("participationDate").ascending())).map(ParticipationNoBlobDTO::fromEntity));
+            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()), PageRequest.of(page, size, Sort.by("participationDate").ascending())).map(ParticipationNoBlobDTO::fromEntity));
         } else {
-            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()) ,PageRequest.of(page, size, Sort.by("participantLastName").ascending())).map(ParticipationNoBlobDTO::fromEntity));
+            return ResponseEntity.ok(participationService.findAllByStatus(Status.valueOf(status.toUpperCase()), PageRequest.of(page, size, Sort.by("participantLastName").ascending())).map(ParticipationNoBlobDTO::fromEntity));
         }
     }
 
@@ -121,6 +120,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allValidatedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findValidatedNoBlob() {
@@ -130,6 +130,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allPendingNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findNonValidatedNoBlob() {
@@ -139,6 +140,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allShippedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findShippedNoBlob() {
@@ -148,6 +150,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/allDeniedNoBlob")
     public ResponseEntity<List<ParticipationNoBlobDTO>> findDeniedNoBlob() {
@@ -157,6 +160,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -170,6 +174,7 @@ public class ParticipationController {
         boolean result = participationService.validate(id);
         return ResponseEntity.ok(result);
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @PatchMapping("/ship/{id}")
     public ResponseEntity<Boolean> ship(@PathVariable Long id) {
@@ -186,27 +191,27 @@ public class ParticipationController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/countHerbicide")
-    public ResponseEntity<Long> findHerbicide (){
-      return  ResponseEntity.ok(participationService.countHerbicide());
+    public ResponseEntity<Long> findHerbicide() {
+        return ResponseEntity.ok(participationService.countHerbicide());
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/countInsecticide")
-    public ResponseEntity<Long> findInsecticide(){
-        return  ResponseEntity.ok(participationService.countInsecticide());
+    public ResponseEntity<Long> findInsecticide() {
+        return ResponseEntity.ok(participationService.countInsecticide());
 
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/countFongicide")
-    public ResponseEntity<Long> findFongicide (){
-        return  ResponseEntity.ok(participationService.countFongicide());
+    public ResponseEntity<Long> findFongicide() {
+        return ResponseEntity.ok(participationService.countFongicide());
     }
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/countAllOtherProductType")
-    public ResponseEntity<Long> countAllOtherProductType (){
-        return  ResponseEntity.ok(participationService.countAllOtherProductType());
+    public ResponseEntity<Long> countAllOtherProductType() {
+        return ResponseEntity.ok(participationService.countAllOtherProductType());
     }
 
 
@@ -218,7 +223,7 @@ public class ParticipationController {
 
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/nbrparticipations")
-    public ResponseEntity<Long> nbrParticipation(){
+    public ResponseEntity<Long> nbrParticipation() {
         return ResponseEntity.ok(participationService.countParticipation());
     }
 
@@ -231,6 +236,7 @@ public class ParticipationController {
                 .toList();
         return ResponseEntity.ok(dtos);
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getLasts3NonValidated")
     public ResponseEntity<List<ParticipationNoBlobDTO>> getLasts3NonValidated() {
@@ -244,7 +250,7 @@ public class ParticipationController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getComments")
     public ResponseEntity<List<SatisfactionCommentDTO>> getComments() {
-        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(Sort.by(Sort.Direction.DESC,"participationDate"))
+        List<SatisfactionCommentDTO> satisfactionCommentDTOList = participationService.findAll(Sort.by(Sort.Direction.DESC, "participationDate"))
                 .stream()
                 .map(SatisfactionCommentDTO::fromEntity)
                 .toList();
@@ -265,7 +271,7 @@ public class ParticipationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/countParticipationsPreceeding7Days")
-    public ResponseEntity<Map<String, Integer>> countParticipationsFor7Days(@RequestParam("date")LocalDate date) {
+    public ResponseEntity<Map<String, Integer>> countParticipationsFor7Days(@RequestParam("date") LocalDate date) {
         return ResponseEntity.ok(participationService.countParticipationsFor7Days(date));
     }
 
@@ -274,6 +280,7 @@ public class ParticipationController {
     public ResponseEntity<Map<String, Integer>> countParticipationsFor5LastMonths() {
         return ResponseEntity.ok(participationService.countParticipationsFor5LastMonths());
     }
+
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/countBySatisfactionComment")
     public ResponseEntity<Integer> countBySatisfactionComment(@RequestParam("satisfactionComment") String satisfactionComment) {

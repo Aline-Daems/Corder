@@ -4,7 +4,6 @@ import be.technobel.corder.bl.UserCheckService;
 import be.technobel.corder.dal.models.User;
 import be.technobel.corder.dal.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.ws.rs.NotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +19,15 @@ public class UserCheckServiceImpl implements UserCheckService {
     }
 
     @Override
-    public Boolean isTruePassword(Long id, String password){
+    public Boolean isTruePassword(Long id, String password) {
 
-        User user = userRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("id non trouvée"));
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("id non trouvée"));
 
-        if(user != null ){
+        if (user != null) {
             boolean check = passwordEncoder.matches(password, user.getPassword());
 
             return check;
-        }else{
+        } else {
             return false;
         }
 

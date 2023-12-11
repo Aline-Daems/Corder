@@ -13,20 +13,13 @@ import be.technobel.corder.pl.models.forms.LoginForm;
 import be.technobel.corder.pl.models.forms.UserForm;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,9 +43,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(UserForm user) {
 
-        try{
-            if( user == null)
-                throw  new IllegalArgumentException("Ne peut pas être null");
+        try {
+            if (user == null)
+                throw new IllegalArgumentException("Ne peut pas être null");
 
             User entity = new User();
 
@@ -62,8 +55,8 @@ public class UserServiceImpl implements UserService {
             entity.setPassword(passwordEncoder.encode(user.password()));
             entity.setEmail(user.email());
             entity.setRole(Role.ADMIN);
-            return  userRepository.save(entity);
-        }catch (DataIntegrityViolationException e)  {
+            return userRepository.save(entity);
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateParticipationException("Ce login ou cet email est déjà enregistré");
         }
 
@@ -105,13 +98,13 @@ public class UserServiceImpl implements UserService {
         if (form == null) {
             throw new IllegalArgumentException("LoginForm cannot be null");
         }
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword()));
 
-            User user = userRepository.findByLogin(form.getLogin()).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userRepository.findByLogin(form.getLogin()).orElseThrow(() -> new NotFoundException("User not found"));
 
-            String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
+        String token = jwtProvider.generateToken(user.getUsername(), user.getRole());
 
-            return new AuthDTO(user.getLogin(), token, user.getRole());
+        return new AuthDTO(user.getLogin(), token, user.getRole());
     }
 
     @Override
@@ -120,9 +113,9 @@ public class UserServiceImpl implements UserService {
 
         String userPassword = dto.getPassword();
 
-        boolean checkPassword =  userCheckService.isTruePassword(userRepository.findByLogin(login).orElseThrow(EntityNotFoundException::new).getId(), userPassword);
+        boolean checkPassword = userCheckService.isTruePassword(userRepository.findByLogin(login).orElseThrow(EntityNotFoundException::new).getId(), userPassword);
 
-        if(checkPassword){
+        if (checkPassword) {
 
             userRepository.changeUserPassword(passwordEncoder.encode(newPassword), login);
 

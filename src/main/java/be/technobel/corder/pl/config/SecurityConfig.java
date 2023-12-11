@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -23,17 +24,18 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder encoder(){
-        return  new BCryptPasswordEncoder();
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
+
     @Bean
-    public AuthenticationManager authenticationManager (AuthenticationConfiguration configuration) throws  Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws  Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> corsConfigurationSource())
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll());
@@ -46,9 +48,9 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(Arrays.asList("*"));
+        config.setAllowedOrigins(List.of("*"));
 
-        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowedHeaders(List.of("*"));
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 

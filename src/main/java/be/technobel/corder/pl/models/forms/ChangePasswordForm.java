@@ -8,8 +8,6 @@ public class ChangePasswordForm {
     private String newPassword;
 
 
-
-
     public String getOldPassword() {
         return oldPassword;
     }
