@@ -11,6 +11,7 @@ import be.technobel.corder.pl.models.dtos.SatisfactionCommentDTO;
 import be.technobel.corder.pl.models.forms.ParticipationForm;
 import be.technobel.corder.pl.models.forms.SatisfactionForm;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -94,12 +95,14 @@ public class ParticipationController {
         }
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/Page")
     public ResponseEntity<Page<ParticipationNoBlobDTO>> findAllByPage(@RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "20") int size) {
         return ResponseEntity.ok(participationService.findAll(PageRequest.of(page, size, Sort.by("participationDate").descending())).map(ParticipationNoBlobDTO::fromEntity));
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN') || hasRole('LOGISTIC')")
     @GetMapping("/PageByStatus")
     public ResponseEntity<Page<ParticipationNoBlobDTO>> findAllPageByStatus(@RequestParam("status") String status, @RequestParam("sort") String sort, @RequestParam(name = "page", defaultValue = "0") int page, @RequestParam(name = "size", defaultValue = "20") int size) {
